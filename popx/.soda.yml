@@ -1,0 +1,3 @@
+---
+development:
+  url: postgres://a/b
