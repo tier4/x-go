@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/tier4/x/idx"
+	"github.com/tier4/x-go/idx"
 )
 
 func TestIsUUIDString(t *testing.T) {

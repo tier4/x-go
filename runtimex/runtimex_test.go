@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/tier4/x/runtimex"
+	"github.com/tier4/x-go/runtimex"
 )
 
 func TestMaxParallelism(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/tier4/x/stringx"
+	"github.com/tier4/x-go/stringx"
 )
 
 func TestRef(t *testing.T) {

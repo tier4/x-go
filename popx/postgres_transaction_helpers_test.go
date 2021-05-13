@@ -13,8 +13,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/tier4/x/dockertestx"
-	"github.com/tier4/x/popx"
+	"github.com/tier4/x-go/dockertestx"
+	"github.com/tier4/x-go/popx"
 )
 
 type User struct {
