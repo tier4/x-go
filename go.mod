@@ -3,6 +3,9 @@ module github.com/tier4/x-go
 go 1.16
 
 require (
+	github.com/aws/aws-sdk-go v1.27.0
+	github.com/aws/aws-sdk-go-v2/config v1.1.7
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.2.3
 	github.com/gobuffalo/packd v1.0.0
 	github.com/gobuffalo/pop/v5 v5.3.4
 	github.com/google/uuid v1.2.0
