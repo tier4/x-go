@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://www.github.com/tier4/x-go/compare/v0.2.1...v0.3.0) (2021-05-13)
+
+
+### Features
+
+* **dockertestx:** DynamoDB ([#7](https://www.github.com/tier4/x-go/issues/7)) ([c95c9e4](https://www.github.com/tier4/x-go/commit/c95c9e4afe1cb4e74ed309d1687cb2dcf3e8f2c0))
+
 ### [0.2.1](https://www.github.com/tier4/x-go/compare/v0.2.0...v0.2.1) (2021-05-13)
 
 
