@@ -24,6 +24,8 @@ func TestNewDynamoDB(t *testing.T) {
 		require.NoError(t, purge())
 	})
 
+	// for test in GitHub Actions environment
+	// if omit these lines, it goes fail due to no EC2 IMDS role found
 	require.NoError(t, os.Setenv("AWS_ACCESS_KEY_ID", "dummy"))
 	require.NoError(t, os.Setenv("AWS_SECRET_ACCESS_KEY", "dummy"))
 	t.Cleanup(func() {
