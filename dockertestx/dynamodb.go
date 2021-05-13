@@ -27,7 +27,10 @@ func NewDynamoDB() (string, PurgeFunc, error) {
 		return "", nil, err
 	}
 
-	cfg, err := config.LoadDefaultConfig(context.TODO())
+	cfg, err := config.LoadDefaultConfig(
+		context.TODO(),
+		config.WithSharedCredentialsFiles([]string{"testdata/aws_credentials.txt"}),
+	)
 	if err != nil {
 		return "", nil, err
 	}

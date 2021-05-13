@@ -2,7 +2,6 @@ package dockertestx_test
 
 import (
 	"context"
-	"os"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -24,16 +23,10 @@ func TestNewDynamoDB(t *testing.T) {
 		require.NoError(t, purge())
 	})
 
-	// for test in GitHub Actions environment
-	// if omit these lines, it goes fail due to no EC2 IMDS role found
-	require.NoError(t, os.Setenv("AWS_ACCESS_KEY_ID", "dummy"))
-	require.NoError(t, os.Setenv("AWS_SECRET_ACCESS_KEY", "dummy"))
-	t.Cleanup(func() {
-		require.NoError(t, os.Unsetenv("AWS_ACCESS_KEY_ID"))
-		require.NoError(t, os.Unsetenv("AWS_SECRET_ACCESS_KEY"))
-	})
-
-	cfg, err := config.LoadDefaultConfig(context.TODO())
+	cfg, err := config.LoadDefaultConfig(
+		context.TODO(),
+		config.WithSharedCredentialsFiles([]string{"testdata/aws_credentials.txt"}),
+	)
 	require.NoError(t, err)
 
 	cl := dynamodb.New(dynamodb.Options{
