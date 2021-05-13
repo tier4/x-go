@@ -1,4 +1,4 @@
-module github.com/tier4/x
+module github.com/tier4/x-go
 
 go 1.16
 

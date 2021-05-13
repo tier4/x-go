@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/tier4/x/dockertestx"
+	"github.com/tier4/x-go/dockertestx"
 )
 
 func TestNewPostgres(t *testing.T) {

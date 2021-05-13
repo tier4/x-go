@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/tier4/x/timex"
+	"github.com/tier4/x-go/timex"
 )
 
 func TestSetTimeNow(t *testing.T) {

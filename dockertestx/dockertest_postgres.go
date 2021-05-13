@@ -10,7 +10,7 @@ import (
 	"github.com/ory/dockertest/v3"
 	"github.com/pkg/errors"
 
-	"github.com/tier4/x/runtimex"
+	"github.com/tier4/x-go/runtimex"
 )
 
 type PurgeFunc func() error
