@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.3.2](https://www.github.com/tier4/x-go/compare/v0.3.1...v0.3.2) (2021-05-14)
+
+
+### Bug Fixes
+
+* **dockertestx:** Use temporary environment ([#11](https://www.github.com/tier4/x-go/issues/11)) ([baf72bf](https://www.github.com/tier4/x-go/commit/baf72bfc2d19ca0e4a5f6cf2c1aae96bb5d809c1))
+
 ### [0.3.1](https://www.github.com/tier4/x-go/compare/v0.3.0...v0.3.1) (2021-05-14)
 
 
