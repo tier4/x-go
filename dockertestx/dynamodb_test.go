@@ -25,7 +25,7 @@ func TestNewDynamoDB(t *testing.T) {
 
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
-		config.WithSharedCredentialsFiles([]string{"testdata/aws_credentials.txt"}),
+		config.WithSharedCredentialsFiles([]string{"stub/aws_credentials.txt"}),
 	)
 	require.NoError(t, err)
 
