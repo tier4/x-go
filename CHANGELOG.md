@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.3.1](https://www.github.com/tier4/x-go/compare/v0.3.0...v0.3.1) (2021-05-14)
+
+
+### Bug Fixes
+
+* **dockertestx:** Stub directory ([#9](https://www.github.com/tier4/x-go/issues/9)) ([5d2f7dd](https://www.github.com/tier4/x-go/commit/5d2f7ddda495beb90901a8e40af8fc13c5da9bc4))
+
 ## [0.3.0](https://www.github.com/tier4/x-go/compare/v0.2.1...v0.3.0) (2021-05-13)
 
 
