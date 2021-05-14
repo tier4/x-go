@@ -3,6 +3,7 @@ package dockertestx
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -27,10 +28,21 @@ func NewDynamoDB() (string, PurgeFunc, error) {
 		return "", nil, err
 	}
 
-	cfg, err := config.LoadDefaultConfig(
-		context.TODO(),
-		config.WithSharedCredentialsFiles([]string{"stub/aws_credentials.txt"}),
-	)
+	{
+		clean, err := temporaryEnv("AWS_ACCESS_KEY_ID", "dummy")
+		if err != nil {
+			return "", nil, err
+		}
+		defer clean()
+	}
+	{
+		clean, err := temporaryEnv("AWS_SECRET_ACCESS_KEY", "dummy")
+		if err != nil {
+			return "", nil, err
+		}
+		defer clean()
+	}
+	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		return "", nil, err
 	}
@@ -57,4 +69,20 @@ func NewDynamoDB() (string, PurgeFunc, error) {
 	}
 
 	return endpoint, purgeFunc, nil
+}
+
+func temporaryEnv(key, value string) (func(), error) {
+	v, ok := os.LookupEnv(key)
+	if err := os.Setenv(key, value); err != nil {
+		return nil, err
+	}
+
+	if ok {
+		return func() {
+			_ = os.Setenv(key, v)
+		}, nil
+	}
+	return func() {
+		_ = os.Unsetenv(key)
+	}, nil
 }
