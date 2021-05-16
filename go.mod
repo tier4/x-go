@@ -10,6 +10,7 @@ require (
 	github.com/gobuffalo/packd v1.0.0
 	github.com/gobuffalo/pop/v5 v5.3.4
 	github.com/google/uuid v1.2.0
+	github.com/hashicorp/go-multierror v1.1.1
 	github.com/jmoiron/sqlx v1.3.3
 	github.com/lib/pq v1.10.1
 	github.com/ory/dockertest/v3 v3.6.5

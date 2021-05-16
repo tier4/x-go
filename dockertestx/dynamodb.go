@@ -10,65 +10,66 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	_ "github.com/lib/pq"
 	"github.com/ory/dockertest/v3"
+	"github.com/pkg/errors"
 )
 
-// NewDynamoDB is to create AWS DynamoDB container and to return its connection and close function
-func NewDynamoDB() (string, PurgeFunc, error) {
-	pool, err := dockertest.NewPool("")
-	if err != nil {
-		return "", nil, err
-	}
+type DynamoDBFactory struct{}
 
-	resource, err := pool.Run(
-		"amazon/dynamodb-local",
-		"latest",
-		[]string{},
-	)
-	if err != nil {
-		return "", nil, err
-	}
+func (f *DynamoDBFactory) repository() string {
+	return "amazon/dynamodb-local"
+}
 
+func (f *DynamoDBFactory) create(p *Pool, opt ContainerOption) (*state, error) {
+	rOpt := &dockertest.RunOptions{
+		Name:       opt.Name,
+		Repository: f.repository(),
+		Tag:        opt.Tag,
+		Env:        []string{},
+	}
+	resource, err := p.Pool.RunWithOptions(rOpt)
+	if err != nil {
+		return nil, errors.WithMessage(err, "Could not start resource")
+	}
+	return &state{
+		ContainerName: opt.Name,
+		Repository:    f.repository(),
+		Tag:           opt.Tag,
+		Env:           rOpt.Env,
+		DSN:           fmt.Sprintf("http://localhost:%s", resource.GetPort("8000/tcp")),
+		r:             resource,
+	}, nil
+}
+
+func (f *DynamoDBFactory) ready(p *Pool, s *state) error {
 	{
 		clean, err := temporaryEnv("AWS_ACCESS_KEY_ID", "dummy")
 		if err != nil {
-			return "", nil, err
+			return errors.WithStack(err)
 		}
 		defer clean()
 	}
 	{
 		clean, err := temporaryEnv("AWS_SECRET_ACCESS_KEY", "dummy")
 		if err != nil {
-			return "", nil, err
+			return errors.WithStack(err)
 		}
 		defer clean()
 	}
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
-		return "", nil, err
+		return errors.WithStack(err)
 	}
 
-	endpoint := fmt.Sprintf("http://localhost:%s", resource.GetPort("8000/tcp"))
-	if err := pool.Retry(func() error {
+	return p.Pool.Retry(func() error {
 		cl := dynamodb.New(dynamodb.Options{
 			Credentials:      cfg.Credentials,
-			EndpointResolver: dynamodb.EndpointResolverFromURL(endpoint),
+			EndpointResolver: dynamodb.EndpointResolverFromURL(s.DSN),
 		})
 		_, err := cl.ListTables(context.TODO(), &dynamodb.ListTablesInput{
 			Limit: aws.Int32(1),
 		})
 		return err
-	}); err != nil {
-		return "", nil, err
-	}
-
-	purgeFunc := func() error {
-		if err := pool.Purge(resource); err != nil {
-			return err
-		}
-		return nil
-	}
-
-	return endpoint, purgeFunc, nil
+	})
 }
 
 func temporaryEnv(key, value string) (func(), error) {

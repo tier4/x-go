@@ -14,14 +14,17 @@ import (
 	"github.com/tier4/x-go/dockertestx"
 )
 
-func TestNewDynamoDB(t *testing.T) {
+func TestPool_NewDynamoDB(t *testing.T) {
 	t.Parallel()
 
-	endpoint, purge, err := dockertestx.NewDynamoDB()
+	p, err := dockertestx.New(dockertestx.PoolOption{})
 	require.NoError(t, err)
 	t.Cleanup(func() {
-		require.NoError(t, purge())
+		require.NoError(t, p.Purge())
 	})
+
+	endpoint, err := p.NewResource(new(dockertestx.DynamoDBFactory), dockertestx.ContainerOption{})
+	require.NoError(t, err)
 
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),

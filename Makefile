@@ -40,7 +40,7 @@ test: unit-test ## test all
 
 .PHONY: unit-test
 unit-test: ## unit test
-	$(GOTEST) -failfast -count=1 -race ./...
+	$(GOTEST) -failfast -cover -count=1 -race ./...
 
 .PHONY: clean
 clean: ## clean bin and cache

@@ -28,12 +28,21 @@ var migrationFS embed.FS
 func TestClient_TransactionWithTryAdvisoryLock(t *testing.T) {
 	t.Parallel()
 
-	conn, purge, err := dockertestx.NewPostgres("alpine")
+	p, err := dockertestx.New(dockertestx.PoolOption{})
 	require.NoError(t, err)
 	t.Cleanup(func() {
-		require.NoError(t, purge())
+		require.NoError(t, p.Purge())
 	})
 
+	dsn, err := p.NewResource(new(dockertestx.PostgresFactory), dockertestx.ContainerOption{
+		Tag: "alpine",
+	})
+	require.NoError(t, err)
+
+	conn, err := pop.NewConnection(&pop.ConnectionDetails{
+		URL: dsn,
+	})
+	require.NoError(t, err)
 	mb, err := pop.NewMigrationBox(popx.NewMigrationBox(migrationFS), conn)
 	require.NoError(t, err)
 
