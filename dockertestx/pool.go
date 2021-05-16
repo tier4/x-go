@@ -121,24 +121,6 @@ func (p *Pool) Save() error {
 	return nil
 }
 
-func (p *Pool) findState(name, repository, tag string) (*state, bool) {
-	if len(name) > 0 {
-		for _, s := range p.states {
-			if s.ContainerName == name {
-				return &s, true
-			}
-		}
-		return nil, false
-	}
-
-	for _, s := range p.states {
-		if s.Repository == repository && s.Tag == tag {
-			return &s, true
-		}
-	}
-	return nil, false
-}
-
 type stateList []state
 
 func (l stateList) find(name, repository, tag string) (*state, bool) {
@@ -195,7 +177,7 @@ func (p *Pool) NewResource(factory ContainerFactory, opt ContainerOption) (strin
 		opt.Tag = "latest"
 	}
 
-	s, ok := p.findState(opt.Name, factory.repository(), opt.Tag)
+	s, ok := p.states.find(opt.Name, factory.repository(), opt.Tag)
 	if !ok {
 		if len(opt.Name) == 0 {
 			const namePrefix = "dockertestx"
