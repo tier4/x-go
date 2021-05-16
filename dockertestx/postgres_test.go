@@ -1,6 +1,8 @@
 package dockertestx_test
 
 import (
+	"database/sql"
+	"regexp"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,19 +11,29 @@ import (
 	"github.com/tier4/x-go/dockertestx"
 )
 
-func TestNewPostgres(t *testing.T) {
-	t.Parallel()
-
-	conn, purge, err := dockertestx.NewPostgres("13.2-alpine")
+func TestPool_NewPostgres(t *testing.T) {
+	dsnRegex, err := regexp.Compile(`postgres://dockertestx:passw0rd@localhost:\d{4,5}/test\?sslmode=disable`)
 	require.NoError(t, err)
-	t.Cleanup(func() {
-		require.NoError(t, purge())
+
+	t.Run("no option", func(t *testing.T) {
+		t.Parallel()
+
+		p, err := dockertestx.New(dockertestx.PoolOption{})
+		require.NoError(t, err)
+		t.Cleanup(func() {
+			require.NoError(t, p.Purge())
+		})
+
+		dsn, err := p.NewResource(new(dockertestx.PostgresFactory), dockertestx.ContainerOption{
+			Tag: "alpine",
+		})
+		require.NoError(t, err)
+
+		assert.Regexp(t, dsnRegex, dsn)
+		db, err := sql.Open("postgres", dsn)
+		require.NoError(t, err)
+		assert.NoError(t, db.Ping())
+		require.NoError(t, db.Close())
+
 	})
-
-	assert.Regexp(t, `postgres:\/\/dockertest:passw0rd@localhost:\d{4,5}/test\?sslmode=disable`, conn.String())
-
-	type pinger interface {
-		Ping() error
-	}
-	assert.NoError(t, conn.Store.(pinger).Ping())
 }
