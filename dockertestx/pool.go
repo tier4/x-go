@@ -53,19 +53,13 @@ func New(opt PoolOption) (*Pool, error) {
 	states := make(stateList, 0, 3)
 
 	if opt.StateStore != nil {
-		_ = json.NewDecoder(opt.StateStore).Decode(&states)
-		for i := range states {
-			states[i].r, _ = pool.ContainerByName(states[i].ContainerName)
-			if states[i].r == nil {
-				states[i].r, err = pool.RunWithOptions(&dockertest.RunOptions{
-					Name:       states[i].ContainerName,
-					Repository: states[i].Repository,
-					Tag:        states[i].Tag,
-					Env:        states[i].Env,
-				})
-				if err != nil {
-					return nil, errors.WithMessage(err, "failed to create lost container from saved state")
-				}
+		ds := make(stateList, 0, 3)
+		_ = json.NewDecoder(opt.StateStore).Decode(&ds)
+		for i := range ds {
+			ds[i].r, _ = pool.ContainerByName(ds[i].ContainerName)
+			if ds[i].r != nil {
+				// ignore not found container
+				states = append(states, ds[i])
 			}
 		}
 	}
