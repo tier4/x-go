@@ -55,12 +55,14 @@ func New(opt PoolOption) (*Pool, error) {
 	if opt.StateStore != nil {
 		ds := make(stateList, 0, 3)
 		_ = json.NewDecoder(opt.StateStore).Decode(&ds)
-		for i := range ds {
-			ds[i].r, _ = pool.ContainerByName(ds[i].ContainerName)
-			if ds[i].r != nil {
-				// ignore not found container
-				states = append(states, ds[i])
+		for _, s := range ds {
+			r, ok := pool.ContainerByName(s.ContainerName)
+			if !ok || !r.Container.State.Running {
+				// ignore not found or stopped container
+				continue
 			}
+			s.r = r
+			states = append(states, s)
 		}
 	}
 
