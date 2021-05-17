@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://www.github.com/tier4/x-go/compare/v0.3.2...v0.4.0) (2021-05-17)
+
+
+### Features
+
+* **dockertestx:** Save state to reuse container ([#13](https://www.github.com/tier4/x-go/issues/13)) ([dc78bca](https://www.github.com/tier4/x-go/commit/dc78bca42a409b92627a19163453bb7f5516d391))
+
+
+### Bug Fixes
+
+* **dockertestx:** Ignore not found container ([#14](https://www.github.com/tier4/x-go/issues/14)) ([d186536](https://www.github.com/tier4/x-go/commit/d186536fa943f8c75a3ae0775e81e21cdd05b5e6))
+* **dockertestx:** Ignore stopped container ([#15](https://www.github.com/tier4/x-go/issues/15)) ([2784bc7](https://www.github.com/tier4/x-go/commit/2784bc7869428a1093fdb7498a1d7c510745136e))
+
 ### [0.3.2](https://www.github.com/tier4/x-go/compare/v0.3.1...v0.3.2) (2021-05-14)
 
 
