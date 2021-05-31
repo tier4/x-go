@@ -8,7 +8,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	_ "github.com/lib/pq"
 	"github.com/ory/dockertest/v3"
 	"github.com/pkg/errors"
 )

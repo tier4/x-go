@@ -5,9 +5,12 @@ go 1.16
 require (
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/aws/aws-sdk-go v1.38.40
-	github.com/aws/aws-sdk-go-v2 v1.5.0
+	github.com/aws/aws-sdk-go-v2 v1.6.0
 	github.com/aws/aws-sdk-go-v2/config v1.2.0
+	github.com/aws/aws-sdk-go-v2/credentials v1.2.0
+	github.com/aws/aws-sdk-go-v2/internal/ini v1.0.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.3.0
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.9.0
 	github.com/containerd/continuity v0.1.0 // indirect
 	github.com/fatih/color v1.11.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
