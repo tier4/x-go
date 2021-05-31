@@ -37,3 +37,27 @@ func TestPool_NewPostgres(t *testing.T) {
 
 	})
 }
+
+func ExampleNew() {
+	p, err := dockertestx.New(dockertestx.PoolOption{})
+	if err != nil {
+		// handle error
+		return
+	}
+	defer p.Purge()
+
+	dsn, err := p.NewResource(new(dockertestx.PostgresFactory), dockertestx.ContainerOption{
+		Tag: "13-alpine",
+	})
+	if err != nil {
+		// handle error
+		return
+	}
+
+	db, err := sql.Open("postgres", dsn)
+	if err != nil {
+		// handle error
+		return
+	}
+	defer db.Close()
+}
