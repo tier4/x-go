@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.0](https://www.github.com/tier4/x-go/compare/v0.4.0...v0.5.0) (2021-05-31)
+
+
+### Features
+
+* **dockertestx:** S3 ([#18](https://www.github.com/tier4/x-go/issues/18)) ([5741787](https://www.github.com/tier4/x-go/commit/5741787f2e6e45a0d0cfe0bffef8f2cb4d935472))
+* **popx:** Reset migration helper ([#20](https://www.github.com/tier4/x-go/issues/20)) ([7333ad4](https://www.github.com/tier4/x-go/commit/7333ad404fe511df33248890d6de468bf047997a))
+
 ## [0.4.0](https://www.github.com/tier4/x-go/compare/v0.3.2...v0.4.0) (2021-05-17)
 
 
