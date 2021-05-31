@@ -30,6 +30,11 @@ func (c *Client) MigrateDown(_ context.Context, steps int) error {
 	return c.mb.Down(steps)
 }
 
+// MigrateReset all
+func (c *Client) MigrateReset(ctx context.Context) error {
+	return c.MigrateDown(ctx, -1)
+}
+
 // MigrateUp migrates all of un-executed
 func (c *Client) MigrateUp(_ context.Context) error {
 	return c.mb.Up()
