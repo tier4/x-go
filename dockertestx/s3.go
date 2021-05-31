@@ -53,7 +53,6 @@ func (f *S3Factory) ready(p *Pool, s *state) error {
 			EndpointResolver: s3.EndpointResolverFromURL(s.DSN),
 		})
 		_, err := cl.ListBuckets(context.TODO(), &s3.ListBucketsInput{})
-		fmt.Printf("%v\n", err)
 		return err
 	})
 }
