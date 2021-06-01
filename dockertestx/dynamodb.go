@@ -3,10 +3,9 @@ package dockertestx
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/ory/dockertest/v3"
 	"github.com/pkg/errors"
@@ -40,28 +39,9 @@ func (f *DynamoDBFactory) create(p *Pool, opt ContainerOption) (*state, error) {
 }
 
 func (f *DynamoDBFactory) ready(p *Pool, s *state) error {
-	{
-		clean, err := temporaryEnv("AWS_ACCESS_KEY_ID", "dummy")
-		if err != nil {
-			return errors.WithStack(err)
-		}
-		defer clean()
-	}
-	{
-		clean, err := temporaryEnv("AWS_SECRET_ACCESS_KEY", "dummy")
-		if err != nil {
-			return errors.WithStack(err)
-		}
-		defer clean()
-	}
-	cfg, err := config.LoadDefaultConfig(context.TODO())
-	if err != nil {
-		return errors.WithStack(err)
-	}
-
 	return p.Pool.Retry(func() error {
 		cl := dynamodb.New(dynamodb.Options{
-			Credentials:      cfg.Credentials,
+			Credentials:      credentials.NewStaticCredentialsProvider("dummy", "dummy", ""),
 			EndpointResolver: dynamodb.EndpointResolverFromURL(s.DSN),
 		})
 		_, err := cl.ListTables(context.TODO(), &dynamodb.ListTablesInput{
@@ -69,20 +49,4 @@ func (f *DynamoDBFactory) ready(p *Pool, s *state) error {
 		})
 		return err
 	})
-}
-
-func temporaryEnv(key, value string) (func(), error) {
-	v, ok := os.LookupEnv(key)
-	if err := os.Setenv(key, value); err != nil {
-		return nil, err
-	}
-
-	if ok {
-		return func() {
-			_ = os.Setenv(key, v)
-		}, nil
-	}
-	return func() {
-		_ = os.Unsetenv(key)
-	}, nil
 }
