@@ -79,7 +79,8 @@ func (c *Client) GetConnection(ctx context.Context) *pop.Connection {
 			return conn.WithContext(ctx)
 		}
 	}
-	return c.c.WithContext(ctx)
+	// WithContext() returns connection with store which incompatible with sqlx.QueryerContext
+	return c.c
 }
 
 // GetSqlxQueryer returns sqlx.QueryerContext wrapped by pop
