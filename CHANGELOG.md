@@ -1,5 +1,13 @@
 # Changelog
 
+### [0.5.1](https://www.github.com/tier4/x-go/compare/v0.5.0...v0.5.1) (2021-08-05)
+
+
+### Bug Fixes
+
+* **dockertestx:** remove unnecessary log ([#22](https://www.github.com/tier4/x-go/issues/22)) ([d467ea2](https://www.github.com/tier4/x-go/commit/d467ea231ec8037f4b5c9bacbffa0290ba27eaa8))
+* **popx:** Connection.Store compatible with sqlx.QueryerContext ([#25](https://www.github.com/tier4/x-go/issues/25)) ([0e499fd](https://www.github.com/tier4/x-go/commit/0e499fd4ecb4da0600bf53fd76706bc4c2824b06))
+
 ## [0.5.0](https://www.github.com/tier4/x-go/compare/v0.4.0...v0.5.0) (2021-05-31)
 
 
