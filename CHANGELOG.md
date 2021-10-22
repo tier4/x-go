@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.5.2](https://www.github.com/tier4/x-go/compare/v0.5.1...v0.5.2) (2021-10-22)
+
+
+### Bug Fixes
+
+* CVE-2021-42576 github.com/microcosm-cc/bluemonday ([#27](https://www.github.com/tier4/x-go/issues/27)) ([62884e5](https://www.github.com/tier4/x-go/commit/62884e50964b8fb04e2a12f21561a0ccada4a2e1))
+
 ### [0.5.1](https://www.github.com/tier4/x-go/compare/v0.5.0...v0.5.1) (2021-08-05)
 
 
