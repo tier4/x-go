@@ -1,4 +1,4 @@
-package popx_test
+package bunx_test
 
 import (
 	"context"
@@ -7,22 +7,24 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gobuffalo/pop/v5"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/driver/pgdriver"
 	"golang.org/x/sync/errgroup"
 
+	"github.com/tier4/x-go/bunx"
 	"github.com/tier4/x-go/dockertestx"
-	"github.com/tier4/x-go/popx"
 )
 
 type User struct {
-	ID    int    `db:"id"`
+	ID    int64  `db:"id,pk"`
 	Email string `db:"email"`
 }
 
-//go:embed testdata/migrations
+//go:embed testdata/migrations/*.sql
 var migrationFS embed.FS
 
 func TestClient_TransactionWithTryAdvisoryLock(t *testing.T) {
@@ -39,18 +41,18 @@ func TestClient_TransactionWithTryAdvisoryLock(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	conn, err := pop.NewConnection(&pop.ConnectionDetails{
-		URL: dsn,
-	})
-	require.NoError(t, err)
-	mb, err := pop.NewMigrationBox(popx.NewMigrationBox(migrationFS), conn)
-	require.NoError(t, err)
+	sqlDB := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	db := bun.NewDB(sqlDB, pgdialect.New())
 
-	cl, err := popx.New(conn, &mb)
+	cl, err := bunx.NewClient(db)
+	require.NoError(t, err)
+	migrator, err := bunx.NewMigrator(db, migrationFS, bunx.NewNoopLogger())
 	require.NoError(t, err)
 
 	ctx := context.Background()
-	require.NoError(t, cl.MigrateUp(ctx))
+
+	_ = migrator.Reset(ctx)
+	require.NoError(t, migrator.Migrate(ctx))
 
 	tx1 := &User{
 		Email: "example01@example.com",
@@ -62,30 +64,33 @@ func TestClient_TransactionWithTryAdvisoryLock(t *testing.T) {
 	key := "test"
 	var eg errgroup.Group
 	eg.Go(func() error {
-		return cl.TransactionWithTryAdvisoryLock(ctx, key, func(ctx context.Context, conn *pop.Connection) error {
+		return cl.TransactionWithTryAdvisoryLock(ctx, key, func(ctx context.Context, tx bun.Tx) error {
 			time.Sleep(100 * time.Millisecond)
-			return cl.GetConnection(ctx).Save(tx1)
+			_, err := tx.NewInsert().Model(tx1).Exec(ctx)
+			return err
 		})
 	})
-	// to ensure to execute 1st transaction
+	// to ensure to start 1st transaction
 	time.Sleep(10 * time.Millisecond)
 	eg.Go(func() error {
-		return cl.TransactionWithTryAdvisoryLock(ctx, key, func(ctx context.Context, conn *pop.Connection) error {
-			return cl.GetConnection(ctx).Save(tx2)
+		return cl.TransactionWithTryAdvisoryLock(ctx, key, func(ctx context.Context, tx bun.Tx) error {
+			_, err := tx.NewInsert().Model(tx2).Exec(ctx)
+			return err
 		})
 	})
 
 	err = eg.Wait()
 	require.Error(t, err)
-	assert.True(t, errors.Is(err, popx.ErrDataLockTaken), err)
+	assert.ErrorIs(t, err, bunx.ErrDataLockTaken)
 
 	var (
 		found1 User
 		found2 User
 	)
-	require.NoError(t, cl.GetConnection(ctx).Find(&found1, tx1.ID))
+
+	require.NoError(t, cl.DB().NewSelect().Model(&found1).Where("id = ?", tx1.ID).Scan(ctx))
 	assert.Equal(t, *tx1, found1)
 
-	err = cl.GetConnection(ctx).Find(&found2, tx2.ID)
+	err = cl.DB().NewSelect().Model(&found2).Where("id = ?", tx2.ID).Scan(ctx)
 	assert.True(t, errors.Is(err, sql.ErrNoRows))
 }
