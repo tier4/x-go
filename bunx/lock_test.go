@@ -65,7 +65,7 @@ func TestClient_TransactionWithTryAdvisoryLock(t *testing.T) {
 	var eg errgroup.Group
 	eg.Go(func() error {
 		return cl.TransactionWithTryAdvisoryLock(ctx, key, func(ctx context.Context, tx bun.Tx) error {
-			time.Sleep(50 * time.Millisecond)
+			time.Sleep(100 * time.Millisecond)
 			_, err := tx.NewInsert().Model(tx1).Exec(ctx)
 			return err
 		})
