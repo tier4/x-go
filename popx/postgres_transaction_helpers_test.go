@@ -63,7 +63,7 @@ func TestClient_TransactionWithTryAdvisoryLock(t *testing.T) {
 	var eg errgroup.Group
 	eg.Go(func() error {
 		return cl.TransactionWithTryAdvisoryLock(ctx, key, func(ctx context.Context, conn *pop.Connection) error {
-			time.Sleep(50 * time.Millisecond)
+			time.Sleep(100 * time.Millisecond)
 			return cl.GetConnection(ctx).Save(tx1)
 		})
 	})
