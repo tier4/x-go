@@ -15,7 +15,7 @@ var (
 // TransactionWithTryAdvisoryLock is Transaction with pg_try_advisory_xact_lock
 // if a lock has already taken, returns error immediately
 func (c *Client) TransactionWithTryAdvisoryLock(ctx context.Context, key string, callback func(ctx context.Context, tx bun.Tx) error) error {
-	return c.DB().RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
+	return c.db.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
 		if err := tryTakeAdvisoryLock(ctx, tx, key); err != nil {
 			return err
 		}
