@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0](https://www.github.com/tier4/x-go/compare/v0.5.2...v0.6.0) (2022-01-15)
+
+
+### Features
+
+* New ORM wrapper; bunx ([#29](https://www.github.com/tier4/x-go/issues/29)) ([0c9d526](https://www.github.com/tier4/x-go/commit/0c9d5265883e1a0c94ed632699391586bc5c93fc))
+
+
+### Bug Fixes
+
+* Use stdlib errors instead of github.com/pkg/errors ([#32](https://www.github.com/tier4/x-go/issues/32)) ([7e62d2e](https://www.github.com/tier4/x-go/commit/7e62d2e5f854652e5435188afa807e91a99f9246))
+
 ### [0.5.2](https://www.github.com/tier4/x-go/compare/v0.5.1...v0.5.2) (2021-10-22)
 
 
