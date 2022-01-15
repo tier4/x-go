@@ -5,7 +5,6 @@ import (
 	"io"
 
 	"github.com/gobuffalo/pop/v5"
-	"github.com/pkg/errors"
 )
 
 type Client struct {
@@ -41,7 +40,7 @@ func (c *Client) MigrateUp(_ context.Context) error {
 }
 
 func (c *Client) Close(ctx context.Context) error {
-	return errors.WithStack(c.GetConnection(ctx).Close())
+	return c.GetConnection(ctx).Close()
 }
 
 func (c *Client) Ping() error {
@@ -49,5 +48,5 @@ func (c *Client) Ping() error {
 		Ping() error
 	}
 	// This can not be contextualized because of some gobuffalo/pop limitations.
-	return errors.WithStack(c.c.Store.(pinger).Ping())
+	return c.c.Store.(pinger).Ping()
 }

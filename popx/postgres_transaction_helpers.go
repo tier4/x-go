@@ -2,14 +2,15 @@ package popx
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"github.com/gobuffalo/pop/v5"
 	"github.com/jmoiron/sqlx"
-	"github.com/pkg/errors"
 )
 
 var (
-	ErrDataLockTaken = errors.Errorf("data lock taken")
+	ErrDataLockTaken = errors.New("data lock taken")
 )
 
 type transactionContextKey int
@@ -67,7 +68,7 @@ func tryTakeAdvisoryLock(tx *pop.Connection, key string) error {
 		return err
 	}
 	if !result {
-		return errors.WithMessagef(ErrDataLockTaken, "data lock taken at the key %s", key)
+		return fmt.Errorf("data lock taken at the key %s: %w", key, ErrDataLockTaken)
 	}
 	return nil
 }

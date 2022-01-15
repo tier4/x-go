@@ -2,12 +2,12 @@ package dockertestx
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/ory/dockertest/v3"
-	"github.com/pkg/errors"
 
 	"github.com/tier4/x-go/idx"
 )
@@ -43,11 +43,11 @@ func (o *PoolOption) validate() error {
 // New Pool instance
 func New(opt PoolOption) (*Pool, error) {
 	if err := opt.validate(); err != nil {
-		return nil, errors.WithStack(err)
+		return nil, err
 	}
 	pool, err := dockertest.NewPool("")
 	if err != nil {
-		return nil, errors.WithMessage(err, "Could not connect to docker")
+		return nil, fmt.Errorf("could not connect to docker: %w", err)
 	}
 
 	states := make(stateList, 0, 3)
@@ -106,13 +106,13 @@ func (p *Pool) Save() error {
 		s = p.states
 	}
 	if err := p.option.StateStore.Truncate(0); err != nil {
-		return errors.WithMessage(err, "Could not truncate container state")
+		return fmt.Errorf("could not truncate container state: %w", err)
 	}
 	if _, err := p.option.StateStore.Seek(0, 0); err != nil {
-		return errors.WithMessage(err, "Could not change offset in state file")
+		return fmt.Errorf("could not change offset in state file: %w", err)
 	}
 	if err := json.NewEncoder(p.option.StateStore).Encode(&s); err != nil {
-		return errors.WithMessage(err, "Could not save container state")
+		return fmt.Errorf("could not save container state: %w", err)
 	}
 	return nil
 }
@@ -183,12 +183,12 @@ func (p *Pool) NewResource(factory ContainerFactory, opt ContainerOption) (strin
 		var err error
 		s, err = factory.create(p, opt)
 		if err != nil {
-			return "", errors.WithStack(err)
+			return "", err
 		}
 		p.states = append(p.states, *s)
 	}
 	if err := factory.ready(p, s); err != nil {
-		return "", errors.WithStack(err)
+		return "", err
 	}
 	return s.DSN, nil
 }

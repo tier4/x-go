@@ -7,7 +7,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/ory/dockertest/v3"
-	"github.com/pkg/errors"
 )
 
 const (
@@ -34,7 +33,7 @@ func (f *S3Factory) create(p *Pool, opt ContainerOption) (*state, error) {
 	}
 	resource, err := p.Pool.RunWithOptions(rOpt)
 	if err != nil {
-		return nil, errors.WithMessage(err, "Could not start resource")
+		return nil, fmt.Errorf("could not start resource: %w", err)
 	}
 	return &state{
 		ContainerName: opt.Name,

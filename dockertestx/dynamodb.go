@@ -8,7 +8,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/ory/dockertest/v3"
-	"github.com/pkg/errors"
 )
 
 type DynamoDBFactory struct{}
@@ -26,7 +25,7 @@ func (f *DynamoDBFactory) create(p *Pool, opt ContainerOption) (*state, error) {
 	}
 	resource, err := p.Pool.RunWithOptions(rOpt)
 	if err != nil {
-		return nil, errors.WithMessage(err, "Could not start resource")
+		return nil, fmt.Errorf("could not start resource: %w", err)
 	}
 	return &state{
 		ContainerName: opt.Name,
