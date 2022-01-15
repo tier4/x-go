@@ -23,12 +23,18 @@ var (
 //go:embed testdata/migrations/*.sql
 var migrationFS embed.FS
 
+// SA3000 os.Exit is not necessary from Go 1.15
 func TestMain(m *testing.M) {
 	p, err := dockertestx.New(dockertestx.PoolOption{})
 	if err != nil {
 		log.Fatalln(err)
 	}
-	defer p.Purge()
+	defer func(p *dockertestx.Pool) {
+		err := p.Purge()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}(p)
 
 	dsn, err := p.NewResource(new(dockertestx.PostgresFactory), dockertestx.ContainerOption{
 		Tag: "alpine",
@@ -44,7 +50,12 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	defer client.Close()
+	defer func(client *bunx.Client) {
+		err := client.Close()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}(client)
 
 	migrator, err = bunx.NewMigrator(db, migrationFS, bunx.NewNoopLogger())
 	if err != nil {
