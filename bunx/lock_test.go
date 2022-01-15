@@ -4,10 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"embed"
+	"errors"
 	"testing"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/uptrace/bun"

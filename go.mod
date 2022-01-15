@@ -28,7 +28,6 @@ require (
 	github.com/moby/term v0.0.0-20210619224110-3f7ff695adc6 // indirect
 	github.com/opencontainers/runc v1.0.3 // indirect
 	github.com/ory/dockertest/v3 v3.8.1
-	github.com/pkg/errors v0.9.1
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/uptrace/bun v1.0.21

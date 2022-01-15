@@ -6,7 +6,6 @@ import (
 
 	_ "github.com/lib/pq"
 	"github.com/ory/dockertest/v3"
-	"github.com/pkg/errors"
 )
 
 type PostgresFactory struct{}
@@ -32,7 +31,7 @@ func (f *PostgresFactory) create(p *Pool, opt ContainerOption) (*state, error) {
 	}
 	resource, err := p.Pool.RunWithOptions(rOpt)
 	if err != nil {
-		return nil, errors.WithMessage(err, "Could not start resource")
+		return nil, fmt.Errorf("could not start resource: %w", err)
 	}
 	return &state{
 		ContainerName: opt.Name,

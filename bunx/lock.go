@@ -2,13 +2,14 @@ package bunx
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
 )
 
 var (
-	ErrDataLockTaken = errors.Errorf("data lock taken")
+	ErrDataLockTaken = errors.New("data lock taken")
 )
 
 // TransactionWithTryAdvisoryLock is Transaction with pg_try_advisory_xact_lock
@@ -37,7 +38,7 @@ func tryTakeAdvisoryLock(ctx context.Context, tx bun.Tx, key string) error {
 		return err
 	}
 	if !result {
-		return errors.WithMessagef(ErrDataLockTaken, "data lock taken at the key %s", key)
+		return fmt.Errorf("data lock taken at the key %s: %w", key, ErrDataLockTaken)
 	}
 	return nil
 }

@@ -4,11 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"embed"
+	"errors"
 	"testing"
 	"time"
 
 	"github.com/gobuffalo/pop/v5"
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
