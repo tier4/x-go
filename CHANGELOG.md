@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.7.0](https://www.github.com/tier4/x-go/compare/v0.6.0...v0.7.0) (2022-02-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* Bump pop to v6 (#34)
+
+### Bug Fixes
+
+* Bump pop to v6 ([#34](https://www.github.com/tier4/x-go/issues/34)) ([a1fdcc2](https://www.github.com/tier4/x-go/commit/a1fdcc2d367f4a2f002f6cabd57d7bcf1637f321))
+
 ## [0.6.0](https://www.github.com/tier4/x-go/compare/v0.5.2...v0.6.0) (2022-01-15)
 
 
