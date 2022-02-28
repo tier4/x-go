@@ -4,7 +4,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/gobuffalo/pop/v5"
+	"github.com/gobuffalo/pop/v6"
 )
 
 type Client struct {
