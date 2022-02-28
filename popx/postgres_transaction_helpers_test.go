@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gobuffalo/pop/v5"
+	"github.com/gobuffalo/pop/v6"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
@@ -43,7 +43,7 @@ func TestClient_TransactionWithTryAdvisoryLock(t *testing.T) {
 		URL: dsn,
 	})
 	require.NoError(t, err)
-	mb, err := pop.NewMigrationBox(popx.NewMigrationBox(migrationFS), conn)
+	mb, err := pop.NewMigrationBox(migrationFS, conn)
 	require.NoError(t, err)
 
 	cl, err := popx.New(conn, &mb)
