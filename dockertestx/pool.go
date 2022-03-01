@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/hashicorp/go-multierror"
 	"github.com/ory/dockertest/v3"
 
 	"github.com/tier4/x-go/idx"
@@ -75,16 +74,20 @@ func New(opt PoolOption) (*Pool, error) {
 
 // ForcePurge regardless KeepContainer option
 func (p *Pool) ForcePurge() error {
-	var merr error
+	var err error
 	for _, s := range p.states {
 		if s.r == nil {
 			continue
 		}
-		if err := p.Pool.Purge(s.r); err != nil {
-			merr = multierror.Append(merr, err)
+		if e := p.Pool.Purge(s.r); e != nil {
+			if err == nil {
+				err = e
+			} else {
+				err = fmt.Errorf("%s: %w", err, err)
+			}
 		}
 	}
-	return merr
+	return err
 }
 
 // Purge if KeepContainer option is false
