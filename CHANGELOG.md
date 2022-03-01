@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.8.0](https://www.github.com/tier4/x-go/compare/v0.7.0...v0.8.0) (2022-03-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* Drop Go 1.16 support (#38)
+* Remove popx (#36)
+
+### Bug Fixes
+
+* Drop Go 1.16 support ([#38](https://www.github.com/tier4/x-go/issues/38)) ([ef30f00](https://www.github.com/tier4/x-go/commit/ef30f00eca5acc25b85054f2ee3c2e85a8f4e797))
+* Remove popx ([#36](https://www.github.com/tier4/x-go/issues/36)) ([3bffe78](https://www.github.com/tier4/x-go/commit/3bffe782c2eceee47c0539e7f7cc224f72d5fa6a))
+
 ## [0.7.0](https://www.github.com/tier4/x-go/compare/v0.6.0...v0.7.0) (2022-02-28)
 
 
