@@ -73,6 +73,6 @@ func TestMain(m *testing.M) {
 }
 
 type User struct {
-	ID    int64  `db:"id,pk"`
-	Email string `db:"email"`
+	ID    int64  `bun:"id,pk,autoincrement"`
+	Email string `bun:"email"`
 }
