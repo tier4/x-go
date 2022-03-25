@@ -4,18 +4,18 @@ go 1.17
 
 require (
 	github.com/aws/aws-sdk-go v1.43.8
-	github.com/aws/aws-sdk-go-v2 v1.14.0
+	github.com/aws/aws-sdk-go-v2 v1.16.1
 	github.com/aws/aws-sdk-go-v2/config v1.9.0
-	github.com/aws/aws-sdk-go-v2/credentials v1.9.0
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.14.0
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.25.0
+	github.com/aws/aws-sdk-go-v2/credentials v1.11.1
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.2
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.26.2
 	github.com/google/uuid v1.3.0
 	github.com/lib/pq v1.10.4
 	github.com/ory/dockertest/v3 v3.8.1
 	github.com/stretchr/testify v1.7.0
-	github.com/uptrace/bun v1.1.0
-	github.com/uptrace/bun/dialect/pgdialect v1.1.0
-	github.com/uptrace/bun/driver/pgdriver v1.1.0
+	github.com/uptrace/bun v1.1.2
+	github.com/uptrace/bun/dialect/pgdialect v1.1.2
+	github.com/uptrace/bun/driver/pgdriver v1.1.2
 	go.uber.org/zap v1.21.0
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 )
@@ -24,24 +24,24 @@ require (
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/Microsoft/go-winio v0.5.2 // indirect
 	github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5 // indirect
-	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.3.0 // indirect
-	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.11.0 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.5 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.3.0 // indirect
+	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.4.1 // indirect
+	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.2 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.8 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.2 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.2.5 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.8.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.0.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.6.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.8.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.12.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sso v1.10.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sts v1.15.0 // indirect
-	github.com/aws/smithy-go v1.11.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.2 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.2 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.2 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.2 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sso v1.11.2 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sts v1.16.2 // indirect
+	github.com/aws/smithy-go v1.11.2 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.2 // indirect
 	github.com/containerd/continuity v0.2.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/docker/cli v20.10.12+incompatible // indirect
-	github.com/docker/docker v20.10.12+incompatible // indirect
+	github.com/docker/cli v20.10.14+incompatible // indirect
+	github.com/docker/docker v20.10.14+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
@@ -65,9 +65,9 @@ require (
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
-	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
+	golang.org/x/crypto v0.0.0-20220321153916-2c7772ba3064 // indirect
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
-	golang.org/x/sys v0.0.0-20220227234510-4e6760a101f9 // indirect
+	golang.org/x/sys v0.0.0-20220319134239-a9b59b0215f8 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
