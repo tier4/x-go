@@ -6,41 +6,12 @@ name: Lint
 jobs:
   golangci:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go: [ '1.16' ]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup go
-        uses: actions/setup-go@v2
-        with:
-          go-version: ${{ matrix.go }}
-
-      - uses: actions/cache@v2
-        with:
-          path: ~/.cache/golangci-lint
-          key: ${{ runner.os }}-golangcilint-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-golangci-lint-
-
-      - uses: actions/cache@v2
-        with:
-          path: ~/.cache/go-build
-          key: ${{ runner.os }}-gobuild-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-gobuild-
-
-      - uses: actions/cache@v2
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+        uses: actions/checkout@v3
 
       - name: golangci-lint
-        uses: reviewdog/action-golangci-lint@v1
+        uses: reviewdog/action-golangci-lint@v2
         with:
           reporter: github-pr-review
           filter_mode: diff_context
