@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://www.github.com/tier4/x-go/compare/v0.8.0...v0.9.0) (2022-05-12)
+
+
+### Features
+
+* Utility function: Ref and Deref ([#42](https://www.github.com/tier4/x-go/issues/42)) ([cd34ba9](https://www.github.com/tier4/x-go/commit/cd34ba9722cd0f0aac1561230d59fdcfe37a9005))
+
 ## [0.8.0](https://www.github.com/tier4/x-go/compare/v0.7.0...v0.8.0) (2022-03-01)
 
 
