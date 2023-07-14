@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://www.github.com/tier4/x-go/compare/v0.9.0...v0.10.0) (2023-07-14)
+
+
+### Features
+
+* add zstdx package ([#49](https://www.github.com/tier4/x-go/issues/49)) ([001b422](https://www.github.com/tier4/x-go/commit/001b42293c4b9a8262876884751963d8ff7655f5))
+
 ## [0.9.0](https://www.github.com/tier4/x-go/compare/v0.8.0...v0.9.0) (2022-05-12)
 
 
