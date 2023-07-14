@@ -44,3 +44,16 @@ func TestCompress(t *testing.T) {
 	require.NoError(t, err)
 	assert.True(t, info.Size() > 0, "Expected the compressed file to be larger than 0 bytes")
 }
+
+func TestSanitizeExtractPath(t *testing.T) {
+	t.Run("valid path", func(t *testing.T) {
+		path, err := zstdx.SanitizeExtractPath("valid/path.txt", "/target/directory")
+		require.NoError(t, err)
+		assert.Equal(t, "/target/directory/valid/path.txt", path)
+	})
+
+	t.Run("invalid path", func(t *testing.T) {
+		_, err := zstdx.SanitizeExtractPath("../invalid/path.txt", "/target/directory")
+		assert.Error(t, err)
+	})
+}

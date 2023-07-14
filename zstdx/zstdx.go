@@ -75,7 +75,7 @@ func untar(reader io.Reader, targetDir string) ([]string, error) {
 		}
 
 		// the target location where the dir/file should be created
-		path, err := sanitizeExtractPath(header.Name, targetDir)
+		path, err := SanitizeExtractPath(header.Name, targetDir)
 		if err != nil {
 			return nil, err
 		}
@@ -119,7 +119,7 @@ func untarFile(tarReader *tar.Reader, header *tar.Header, path string) error {
 }
 
 // cf. https://snyk.io/research/zip-slip-vulnerability
-func sanitizeExtractPath(filePath, destination string) (string, error) {
+func SanitizeExtractPath(filePath, destination string) (string, error) {
 	path := filepath.Join(destination, filePath)
 	if !strings.HasPrefix(path, filepath.Clean(destination)+string(os.PathSeparator)) {
 		return "", fmt.Errorf("%s: illegal file path", filePath)
