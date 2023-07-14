@@ -13,7 +13,7 @@ export GO111MODULE := on
 export PATH := $(GOBIN):${PATH}
 
 GO_DEPENDENCIES = golang.org/x/tools/cmd/goimports@master \
-				  github.com/golangci/golangci-lint/cmd/golangci-lint@v1.39.0
+				  github.com/golangci/golangci-lint/cmd/golangci-lint@v1.53.3
 
 define make-go-dependency
   # go install is responsible for not re-building when the code hasn't changed

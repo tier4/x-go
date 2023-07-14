@@ -10,8 +10,11 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.19.7
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.33.1
 	github.com/google/uuid v1.3.0
+	github.com/h2non/filetype v1.1.3
+	github.com/klauspost/compress v1.16.7
 	github.com/lib/pq v1.10.9
 	github.com/ory/dockertest/v3 v3.10.0
+	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.1
 	github.com/uptrace/bun v1.1.13
 	github.com/uptrace/bun/dialect/pgdialect v1.1.13
@@ -56,7 +59,6 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.0.2 // indirect
 	github.com/opencontainers/runc v1.1.7 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/sirupsen/logrus v1.9.2 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
