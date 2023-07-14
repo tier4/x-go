@@ -2,6 +2,7 @@ package dockertestx_test
 
 import (
 	"database/sql"
+	"log"
 	"regexp"
 	"testing"
 
@@ -44,7 +45,12 @@ func ExampleNew() {
 		// handle error
 		return
 	}
-	defer p.Purge()
+	defer func(p *dockertestx.Pool) {
+		err := p.Purge()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}(p)
 
 	dsn, err := p.NewResource(new(dockertestx.PostgresFactory), dockertestx.ContainerOption{
 		Tag: "13-alpine",
