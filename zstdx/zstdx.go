@@ -16,7 +16,7 @@ import (
 // For protection from decompression bomb
 const maxFileSize int64 = 16 * 1024 * 1024 * 1024
 
-// The code at https://go.dev/play/p/A2GXsDFWx9m is used as a refference
+// The code at https://go.dev/play/p/A2GXsDFWx9m is used as a reference
 func Uncompress(tarball, targetDir string) ([]string, error) {
 	file, err := os.Open(filepath.Clean(tarball))
 	if err != nil {
@@ -37,7 +37,7 @@ func Uncompress(tarball, targetDir string) ([]string, error) {
 	}
 
 	if !filetype.Is(header, "zst") {
-		return nil, fmt.Errorf("Unknown file format when trying to uncompress %s", tarball)
+		return nil, fmt.Errorf("unknown file format when trying to uncompress %s", tarball)
 	}
 
 	reader, err := zstd.NewReader(file)
