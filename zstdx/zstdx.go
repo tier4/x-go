@@ -18,10 +18,6 @@ const maxFileSize int64 = 16 * 1024 * 1024 * 1024
 
 // The code at https://go.dev/play/p/A2GXsDFWx9m is used as a refference
 func Uncompress(tarball, targetDir string) ([]string, error) {
-	return uncompress(tarball, targetDir)
-}
-
-func uncompress(tarball, targetDir string) ([]string, error) {
 	file, err := os.Open(filepath.Clean(tarball))
 	if err != nil {
 		return nil, err
@@ -132,10 +128,6 @@ func sanitizeExtractPath(filePath, destination string) (string, error) {
 }
 
 func Compress(src, dest string) error {
-	return compress(src, dest)
-}
-
-func compress(src, dest string) error {
 	out, err := os.Create(dest)
 	if err != nil {
 		return err
