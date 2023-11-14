@@ -11,7 +11,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.42.1
 	github.com/google/uuid v1.4.0
 	github.com/h2non/filetype v1.1.3
-	github.com/klauspost/compress v1.16.7
+	github.com/klauspost/compress v1.17.2
 	github.com/lib/pq v1.10.9
 	github.com/ory/dockertest/v3 v3.10.0
 	github.com/pkg/errors v0.9.1
