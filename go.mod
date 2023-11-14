@@ -1,6 +1,6 @@
 module github.com/tier4/x-go
 
-go 1.18
+go 1.19
 
 require (
 	github.com/aws/aws-sdk-go v1.47.10
