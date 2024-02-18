@@ -73,7 +73,7 @@ func (f *PrismFactory) ready(p *Pool, s *state) error {
 		return fmt.Errorf("invalid heath check path: %w", err)
 	}
 	return p.Pool.Retry(func() error {
-		out, err := http.Get(u)
+		out, err := http.Get(u) // #nosec G107
 		if err != nil {
 			return err
 		}

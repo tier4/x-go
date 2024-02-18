@@ -28,7 +28,8 @@ func TestPool_NewPrism(t *testing.T) {
 
 	u, err := url.JoinPath(endpoint, "books")
 	require.NoError(t, err)
-	resp, err := http.Get(u)
+	resp, err := http.Get(u) // #nosec G107
 	require.NoError(t, err)
+	defer resp.Body.Close()
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 }
