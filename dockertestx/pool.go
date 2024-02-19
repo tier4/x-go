@@ -56,8 +56,11 @@ func New(opt PoolOption) (*Pool, error) {
 		_ = json.NewDecoder(opt.StateStore).Decode(&ds)
 		for _, s := range ds {
 			r, ok := pool.ContainerByName(s.ContainerName)
-			if !ok || !r.Container.State.Running {
-				// ignore not found or stopped container
+			if !ok {
+				continue
+			}
+			if !r.Container.State.Running {
+				_ = pool.Purge(r)
 				continue
 			}
 			s.r = r
