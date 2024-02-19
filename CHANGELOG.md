@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://www.github.com/tier4/x-go/compare/v0.11.0...v0.12.0) (2024-02-19)
+
+
+### Features
+
+* **dockertestx:** Support Prism ([#56](https://www.github.com/tier4/x-go/issues/56)) ([05ab7ef](https://www.github.com/tier4/x-go/commit/05ab7ef059b650921ddc6311bdeb70d62b585ba1))
+
 ## [0.11.0](https://www.github.com/tier4/x-go/compare/v0.10.0...v0.11.0) (2023-11-14)
 
 
