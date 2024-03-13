@@ -9,18 +9,18 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.15.2
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.25.1
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.42.1
-	github.com/google/uuid v1.4.0
+	github.com/google/uuid v1.6.0
 	github.com/h2non/filetype v1.1.3
 	github.com/klauspost/compress v1.17.2
 	github.com/lib/pq v1.10.9
 	github.com/ory/dockertest/v3 v3.10.0
 	github.com/pkg/errors v0.9.1
-	github.com/stretchr/testify v1.8.4
-	github.com/uptrace/bun v1.1.16
-	github.com/uptrace/bun/dialect/pgdialect v1.1.16
-	github.com/uptrace/bun/driver/pgdriver v1.1.16
-	go.uber.org/zap v1.26.0
-	golang.org/x/sync v0.5.0
+	github.com/stretchr/testify v1.9.0
+	github.com/uptrace/bun v1.1.17
+	github.com/uptrace/bun/dialect/pgdialect v1.1.17
+	github.com/uptrace/bun/driver/pgdriver v1.1.17
+	go.uber.org/zap v1.27.0
+	golang.org/x/sync v0.6.0
 )
 
 require (
@@ -68,10 +68,10 @@ require (
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/crypto v0.17.0 // indirect
-	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
-	golang.org/x/tools v0.15.0 // indirect
+	golang.org/x/crypto v0.21.0 // indirect
+	golang.org/x/mod v0.16.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/tools v0.19.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	mellium.im/sasl v0.3.1 // indirect
