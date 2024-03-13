@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.13.0](https://www.github.com/tier4/x-go/compare/v0.12.0...v0.13.0) (2024-03-13)
+
+
+### Features
+
+* add Go 1.22 support ([#59](https://www.github.com/tier4/x-go/issues/59)) ([0037862](https://www.github.com/tier4/x-go/commit/0037862da7cd270c528c65a6f6d2f119c4e08946))
+* introduce random package ([#58](https://www.github.com/tier4/x-go/issues/58)) ([61ff285](https://www.github.com/tier4/x-go/commit/61ff285ca303156e4d5b471e2e6855e6b69821ed))
+
 ## [0.12.0](https://www.github.com/tier4/x-go/compare/v0.11.0...v0.12.0) (2024-02-19)
 
 
