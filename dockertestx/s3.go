@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/ory/dockertest/v3"
@@ -48,8 +49,9 @@ func (f *S3Factory) create(p *Pool, opt ContainerOption) (*state, error) {
 func (f *S3Factory) ready(p *Pool, s *state) error {
 	return p.Pool.Retry(func() error {
 		cl := s3.New(s3.Options{
-			Credentials:      credentials.NewStaticCredentialsProvider(S3AWSAccessKeyID, S3AWSSecretAccessKey, ""),
-			EndpointResolver: s3.EndpointResolverFromURL(s.DSN),
+			Credentials:  credentials.NewStaticCredentialsProvider(S3AWSAccessKeyID, S3AWSSecretAccessKey, ""),
+			BaseEndpoint: aws.String(s.DSN),
+			Region:       "us-east-1",
 		})
 		_, err := cl.ListBuckets(context.TODO(), &s3.ListBucketsInput{})
 		return err

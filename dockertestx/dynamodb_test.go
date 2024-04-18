@@ -33,8 +33,9 @@ func TestPool_NewDynamoDB(t *testing.T) {
 	require.NoError(t, err)
 
 	cl := dynamodb.New(dynamodb.Options{
-		Credentials:      cfg.Credentials,
-		EndpointResolver: dynamodb.EndpointResolverFromURL(endpoint),
+		Credentials:  cfg.Credentials,
+		BaseEndpoint: aws.String(endpoint),
+		Region:       "us-east-1",
 	})
 	_, err = cl.CreateTable(context.TODO(), &dynamodb.CreateTableInput{
 		AttributeDefinitions: []types.AttributeDefinition{
