@@ -26,9 +26,10 @@ func TestPool_NewS3(t *testing.T) {
 	require.NoError(t, err)
 
 	cl := s3.New(s3.Options{
-		Credentials:      credentials.NewStaticCredentialsProvider(dockertestx.S3AWSAccessKeyID, dockertestx.S3AWSSecretAccessKey, ""),
-		EndpointResolver: s3.EndpointResolverFromURL(endpoint),
-		UsePathStyle:     true,
+		Credentials:  credentials.NewStaticCredentialsProvider(dockertestx.S3AWSAccessKeyID, dockertestx.S3AWSSecretAccessKey, ""),
+		BaseEndpoint: aws.String(endpoint),
+		Region:       "us-east-1",
+		UsePathStyle: true,
 	})
 	_, err = cl.CreateBucket(context.TODO(), &s3.CreateBucketInput{
 		Bucket: aws.String("test"),

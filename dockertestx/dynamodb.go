@@ -40,8 +40,8 @@ func (f *DynamoDBFactory) create(p *Pool, opt ContainerOption) (*state, error) {
 func (f *DynamoDBFactory) ready(p *Pool, s *state) error {
 	return p.Pool.Retry(func() error {
 		cl := dynamodb.New(dynamodb.Options{
-			Credentials:      credentials.NewStaticCredentialsProvider("dummy", "dummy", ""),
-			EndpointResolver: dynamodb.EndpointResolverFromURL(s.DSN),
+			Credentials:  credentials.NewStaticCredentialsProvider("dummy", "dummy", ""),
+			BaseEndpoint: aws.String(s.DSN),
 		})
 		_, err := cl.ListTables(context.TODO(), &dynamodb.ListTablesInput{
 			Limit: aws.Int32(1),

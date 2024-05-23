@@ -25,7 +25,7 @@ func TestPool_NewSQS(t *testing.T) {
 	require.NoError(t, err)
 
 	cl := sqs.New(sqs.Options{
-		EndpointResolver: sqs.EndpointResolverFromURL(endpoint),
+		BaseEndpoint: aws.String(endpoint),
 	})
 	_, err = cl.CreateQueue(context.TODO(), &sqs.CreateQueueInput{
 		QueueName: aws.String("test"),

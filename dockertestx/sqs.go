@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 
 	"github.com/ory/dockertest/v3"
@@ -38,7 +40,7 @@ func (f *SQSFactory) create(p *Pool, opt ContainerOption) (*state, error) {
 func (f *SQSFactory) ready(p *Pool, s *state) error {
 	return p.Pool.Retry(func() error {
 		cl := sqs.New(sqs.Options{
-			EndpointResolver: sqs.EndpointResolverFromURL(s.DSN),
+			BaseEndpoint: aws.String(s.DSN),
 		})
 		_, err := cl.ListQueues(context.TODO(), &sqs.ListQueuesInput{})
 		return err
