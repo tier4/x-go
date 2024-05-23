@@ -5,9 +5,7 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
-
 	"github.com/ory/dockertest/v3"
 )
 
