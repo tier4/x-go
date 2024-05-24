@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0](https://www.github.com/tier4/x-go/compare/v0.13.0...v0.14.0) (2024-05-24)
+
+
+### Features
+
+* **dockertestx:** support SQS (ElasticMQ) ([#66](https://www.github.com/tier4/x-go/issues/66)) ([a2c292d](https://www.github.com/tier4/x-go/commit/a2c292dea4c48069ab18243bf5e78a8dc055e484))
+
 ## [0.13.0](https://www.github.com/tier4/x-go/compare/v0.12.0...v0.13.0) (2024-03-13)
 
 
