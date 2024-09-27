@@ -29,6 +29,25 @@ func TestUncompress(t *testing.T) {
 	}
 }
 
+func TestUncompressWithCustomSizeLimit(t *testing.T) {
+	// Create a temporary directory to store the output
+	tmpDir, err := os.MkdirTemp("", "uncompress-custom-")
+	defer os.RemoveAll(tmpDir)
+	require.NoError(t, err)
+
+	// Uncompress the tarball
+	files, err := zstdx.UncompressWithCustomSizeLimit("testdata/sample.tar.zst", tmpDir, 1024)
+	require.NoError(t, err)
+
+	// Check if the files are correctly uncompressed
+	assert.Equal(t, 2, len(files), "Expected two files to be uncompressed")
+	for _, f := range files {
+		info, err := os.Stat(f)
+		require.NoError(t, err)
+		assert.False(t, info.IsDir(), "Expected a file, not a directory")
+	}
+}
+
 func TestCompress(t *testing.T) {
 	// Create a temporary file to store the output
 	tmpFile, err := os.CreateTemp("", "compress.tar.zst")

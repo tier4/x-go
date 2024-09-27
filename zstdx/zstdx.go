@@ -14,10 +14,20 @@ import (
 )
 
 // For protection from decompression bomb
-const maxFileSize int64 = 16 * 1024 * 1024 * 1024
+const defaultMaxFileSize int64 = 16 * 1024 * 1024 * 1024
+
+// Uncompress with a default max file size limit
+func Uncompress(tarball, targetDir string) ([]string, error) {
+	return uncompress(tarball, targetDir, defaultMaxFileSize)
+}
+
+// Uncompress with a specified max file size limit
+func UncompressWithCustomSizeLimit(tarball, targetDir string, maxFileSize int64) ([]string, error) {
+	return uncompress(tarball, targetDir, maxFileSize)
+}
 
 // The code at https://go.dev/play/p/A2GXsDFWx9m is used as a reference
-func Uncompress(tarball, targetDir string) ([]string, error) {
+func uncompress(tarball, targetDir string, maxFileSize int64) ([]string, error) {
 	file, err := os.Open(filepath.Clean(tarball))
 	if err != nil {
 		return nil, err
@@ -44,7 +54,7 @@ func Uncompress(tarball, targetDir string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	return untar(reader, targetDir)
+	return untar(reader, targetDir, maxFileSize)
 }
 
 func min(a int64, b int64) int64 {
@@ -54,7 +64,7 @@ func min(a int64, b int64) int64 {
 	return b
 }
 
-func untar(reader io.Reader, targetDir string) ([]string, error) {
+func untar(reader io.Reader, targetDir string, maxFileSize int64) ([]string, error) {
 	var extractedFiles []string
 	tarReader := tar.NewReader(reader)
 
@@ -92,7 +102,7 @@ func untar(reader io.Reader, targetDir string) ([]string, error) {
 		// if it's a file create it
 		case tar.TypeReg, tar.TypeGNUSparse:
 			// tar.Next() will externally only iterate files, so we might have to create intermediate directories here
-			if err := untarFile(tarReader, header, path); err != nil {
+			if err := untarFile(tarReader, header, path, maxFileSize); err != nil {
 				return nil, err
 			}
 			extractedFiles = append(extractedFiles, path)
@@ -100,7 +110,7 @@ func untar(reader io.Reader, targetDir string) ([]string, error) {
 	}
 }
 
-func untarFile(tarReader *tar.Reader, header *tar.Header, path string) error {
+func untarFile(tarReader *tar.Reader, header *tar.Header, path string, maxFileSize int64) error {
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 		return err
 	}
