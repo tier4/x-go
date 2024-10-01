@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.0](https://www.github.com/tier4/x-go/compare/v0.14.0...v0.15.0) (2024-09-27)
+
+
+### Features
+
+* **zstdx:** uncompress with custom size limit ([#70](https://www.github.com/tier4/x-go/issues/70)) ([fb2345e](https://www.github.com/tier4/x-go/commit/fb2345e14aa356ca6f7af9d47fba9b7131110e66))
+
 ## [0.14.0](https://www.github.com/tier4/x-go/compare/v0.13.0...v0.14.0) (2024-05-24)
 
 
