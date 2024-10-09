@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://www.github.com/tier4/x-go/compare/v0.15.0...v0.16.0) (2024-10-09)
+
+
+### Features
+
+* drop Go 1.19 to 1.21 supports and newly support Go 1.23 ([#73](https://www.github.com/tier4/x-go/issues/73)) ([db23e56](https://www.github.com/tier4/x-go/commit/db23e56a720ac290c9b204f9b12e101da3f264aa))
+
 ## [0.15.0](https://www.github.com/tier4/x-go/compare/v0.14.0...v0.15.0) (2024-09-27)
 
 
