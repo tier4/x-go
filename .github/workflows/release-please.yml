@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - main
+      - divide-modules # TODO: Remove this line
 
 name: release-please
 jobs:
@@ -10,7 +11,7 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v4
         with:
+          target-branch: divide-modules # TODO: Remove this line
           config-file: release-please-config.json
-          manifest-file: .release-please-manifest.json
           include-component-in-tag: true
           token: ${{ secrets.GITHUB_TOKEN }}
