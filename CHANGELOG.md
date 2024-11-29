@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.17.0-beta.0 (2024-11-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* independent modules: bunx and dockertestx
+
+### Features
+
+* independent modules: bunx and dockertestx ([c182eb3](https://github.com/tier4/x-go/commit/c182eb3a007ab47cb82acb3a573e251a4c9c1982))
+
 ## [0.16.0](https://www.github.com/tier4/x-go/compare/v0.15.0...v0.16.0) (2024-10-09)
 
 
