@@ -21,3 +21,37 @@ updates:
         update-types:
           - "patch"
           - "minor"
+
+  - package-ecosystem: "gomod"
+    directory: "/bunx"
+    schedule:
+      interval: "weekly"
+      day: "thursday"
+      time: "07:00"
+      timezone: "Asia/Tokyo"
+    reviewers:
+      - sawadashota
+      - kensei18
+      - ryosan-470
+    groups:
+      patch-minor:
+        update-types:
+          - "patch"
+          - "minor"
+
+  - package-ecosystem: "gomod"
+    directory: "/dockertestx"
+    schedule:
+      interval: "weekly"
+      day: "thursday"
+      time: "07:00"
+      timezone: "Asia/Tokyo"
+    reviewers:
+      - sawadashota
+      - kensei18
+      - ryosan-470
+    groups:
+      patch-minor:
+        update-types:
+          - "patch"
+          - "minor"
