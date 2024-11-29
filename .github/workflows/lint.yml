@@ -3,6 +3,9 @@ on:
 
 name: Lint
 
+env:
+  GOTOOLCHAIN: local
+
 jobs:
   golangci:
     runs-on: ubuntu-latest
