@@ -10,7 +10,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/tier4/x-go/dockertestx"
-	"github.com/tier4/x-go/idx"
 )
 
 type container struct {
@@ -64,17 +63,17 @@ func TestNew(t *testing.T) {
 
 		cs := []container{
 			{
-				name:    fmt.Sprintf("dockertestx_postgres_01_%s", idx.ShortID()),
+				name:    fmt.Sprintf("dockertestx_postgres_01_%s", dockertestx.ShortID()),
 				factory: new(dockertestx.PostgresFactory),
 				tag:     "alpine",
 			},
 			{
-				name:    fmt.Sprintf("dockertestx_postgres_02_%s", idx.ShortID()),
+				name:    fmt.Sprintf("dockertestx_postgres_02_%s", dockertestx.ShortID()),
 				factory: new(dockertestx.PostgresFactory),
 				tag:     "alpine",
 			},
 			{
-				name:    fmt.Sprintf("dockertestx_dynamodb_01_%s", idx.ShortID()),
+				name:    fmt.Sprintf("dockertestx_dynamodb_01_%s", dockertestx.ShortID()),
 				factory: new(dockertestx.DynamoDBFactory),
 				tag:     "latest",
 			},

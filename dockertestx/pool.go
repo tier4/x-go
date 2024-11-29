@@ -1,14 +1,15 @@
 package dockertestx
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/ory/dockertest/v3"
-
-	"github.com/tier4/x-go/idx"
 )
 
 // Pool represents a connection to the docker API and is used to create and remove docker images.
@@ -183,7 +184,7 @@ func (p *Pool) NewResource(factory ContainerFactory, opt ContainerOption) (strin
 	if !ok {
 		if len(opt.Name) == 0 {
 			const namePrefix = "dockertestx"
-			opt.Name = fmt.Sprintf("%s_%s", namePrefix, idx.ShortID())
+			opt.Name = fmt.Sprintf("%s_%s", namePrefix, shortID())
 		}
 
 		var err error
@@ -197,4 +198,12 @@ func (p *Pool) NewResource(factory ContainerFactory, opt ContainerOption) (strin
 		return "", err
 	}
 	return s.DSN, nil
+}
+
+// ShortID produces a "unique" 6 bytes long string.
+// Do not use as a reliable way to get unique IDs, instead use for things like logging.
+func shortID() string {
+	b := make([]byte, 6)
+	_, _ = io.ReadFull(rand.Reader, b)
+	return base64.RawURLEncoding.EncodeToString(b)
 }

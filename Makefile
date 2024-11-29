@@ -13,7 +13,7 @@ export GO111MODULE := on
 export PATH := $(GOBIN):${PATH}
 
 GO_DEPENDENCIES = golang.org/x/tools/cmd/goimports@master \
-				  github.com/golangci/golangci-lint/cmd/golangci-lint@v1.53.3
+				  github.com/golangci/golangci-lint/cmd/golangci-lint@v1.62.2
 
 define make-go-dependency
   # go install is responsible for not re-building when the code hasn't changed
@@ -32,15 +32,15 @@ endif
 
 .PHONY: deps
 deps: ## download dependencies
-	$(GO) mod download
-	$(GO) mod tidy
+	find . -name go.mod -execdir $(GO) mod download \;
+	find . -name go.mod -execdir $(GO) mod tidy \;
 
 .PHONY: test
 test: unit-test ## test all
 
 .PHONY: unit-test
 unit-test: ## unit test
-	$(GOTEST) -failfast -cover -count=1 -race ./...
+	find . -name go.mod -execdir $(GOTEST) -failfast -cover -count=1 -race ./... \;
 
 .PHONY: clean
 clean: ## clean bin and cache
@@ -49,12 +49,12 @@ clean: ## clean bin and cache
 
 .PHONY: fmt
 fmt: .bin/goimports ## format source
-	goimports $(GOIMPORTSFLAGS) -w .
-	$(GO) mod tidy
+	find . -name go.mod -execdir goimports $(GOIMPORTSFLAGS) -w . \;
+	find . -name go.mod -execdir $(GO) mod tidy \;
 
 .PHONY: golangci-lint
 golangci-lint: .bin/golangci-lint ## Exec golangci-lint
-	golangci-lint run ./...
+	find . -name go.mod -execdir golangci-lint run ./... \;
 
 .PHONY: lint
 lint: golangci-lint ## exec lint

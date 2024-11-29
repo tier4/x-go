@@ -15,7 +15,7 @@ linters:
     - typecheck
     - unused
 
-run:
-  skip-dirs:
+issues:
+  exclude-dirs:
     - gen
     - design
