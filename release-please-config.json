@@ -1,0 +1,15 @@
+{
+  "release-type": "simple",
+  "bump-minor-pre-major": true,
+  "packages": {
+    ".": {
+      "include-component-in-tag": false
+    },
+    "bunx": {
+      "include-component-in-tag": true
+    },
+    "dockertestx": {
+      "include-component-in-tag": true
+    }
+  }
+}
