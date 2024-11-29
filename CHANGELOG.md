@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.0](https://www.github.com/tier4/x-go/compare/v0.16.0...v0.17.0) (2024-11-29)
+
+
+### Features
+
+* introduce dependabot ([#75](https://www.github.com/tier4/x-go/issues/75)) ([e3f1110](https://www.github.com/tier4/x-go/commit/e3f111081f098b6f3ec78441cfe5cc4085fa18d2))
+
 ## [0.16.0](https://www.github.com/tier4/x-go/compare/v0.15.0...v0.16.0) (2024-10-09)
 
 
