@@ -2,15 +2,16 @@ on:
   push:
     branches:
       - main
+      - divide-modules # TODO: Remove this line
 
 name: release-please
 jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: GoogleCloudPlatform/release-please-action@v2
+      - uses: googleapis/release-please-action@v4
         with:
-          release-type: simple
-          default-branch: main
-          bump-minor-pre-major: yes
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          include-component-in-tag: true
           token: ${{ secrets.GITHUB_TOKEN }}
