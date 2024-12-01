@@ -25,3 +25,46 @@ jobs:
       - run: go mod download
       - run: go mod verify
       - run: go test -v -count=1 -race ./...
+
+  unit-dockertestx:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dockertestx
+    strategy:
+      matrix:
+        go:
+          - '1.22'
+          - '1.23'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go }}
+      - run: go mod download
+      - run: go mod verify
+      - run: go test -v -count=1 -race ./...
+
+  unit-bunx:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bunx
+    strategy:
+      matrix:
+        go:
+          - '1.23'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go }}
+      - run: go mod download
+      - run: go mod verify
+      - run: go test -v -count=1 -race ./...
