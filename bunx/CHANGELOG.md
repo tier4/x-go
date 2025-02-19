@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.1](https://github.com/tier4/x-go/compare/bunx/v0.17.0...bunx/v0.17.1) (2025-02-19)
+
+
+### Bug Fixes
+
+* release for dependencies update ([6acc0bf](https://github.com/tier4/x-go/commit/6acc0bfea35fc8b10c461f4dc5df783288fb4ce6))
+
 ## 0.17.0 (2024-12-01)
 
 
