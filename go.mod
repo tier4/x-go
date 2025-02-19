@@ -7,7 +7,7 @@ toolchain go1.23.3
 require (
 	github.com/google/uuid v1.6.0
 	github.com/h2non/filetype v1.1.3
-	github.com/klauspost/compress v1.17.11
+	github.com/klauspost/compress v1.18.0
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.10.0
 )
