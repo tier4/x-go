@@ -1,21 +1,37 @@
+version: "2"
 linters:
-  disable-all: true
+  default: none
   enable:
     - bodyclose
     - errcheck
     - gocyclo
-    - gofmt
-    - goimports
     - gosec
-    - gosimple
     - govet
     - misspell
     - staticcheck
-    - stylecheck
-    - typecheck
     - unused
-
-issues:
-  exclude-dirs:
-    - gen
-    - design
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - gen
+      - design
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - gen
+      - design
+      - third_party$
+      - builtin$
+      - examples$
