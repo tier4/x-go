@@ -21,7 +21,7 @@ func Uncompress(tarball, targetDir string) ([]string, error) {
 	return uncompress(tarball, targetDir, defaultMaxFileSize)
 }
 
-// Uncompress with a specified max file size limit
+// UncompressWithCustomSizeLimit with a specified max file size limit
 func UncompressWithCustomSizeLimit(tarball, targetDir string, maxFileSize int64) ([]string, error) {
 	return uncompress(tarball, targetDir, maxFileSize)
 }
@@ -55,13 +55,6 @@ func uncompress(tarball, targetDir string, maxFileSize int64) ([]string, error) 
 		return nil, err
 	}
 	return untar(reader, targetDir, maxFileSize)
-}
-
-func min(a int64, b int64) int64 {
-	if a < b {
-		return a
-	}
-	return b
 }
 
 func untar(reader io.Reader, targetDir string, maxFileSize int64) ([]string, error) {
