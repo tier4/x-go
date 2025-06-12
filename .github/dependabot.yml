@@ -12,10 +12,6 @@ updates:
       day: "thursday"
       time: "07:00"
       timezone: "Asia/Tokyo"
-    reviewers:
-      - sawadashota
-      - kensei18
-      - ryosan-470
     groups:
       patch-minor:
         update-types:
@@ -29,10 +25,6 @@ updates:
       day: "thursday"
       time: "07:00"
       timezone: "Asia/Tokyo"
-    reviewers:
-      - sawadashota
-      - kensei18
-      - ryosan-470
     groups:
       patch-minor:
         update-types:
