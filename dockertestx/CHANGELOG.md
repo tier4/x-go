@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://github.com/tier4/x-go/compare/dockertestx/v0.17.1...dockertestx/v0.18.0) (2025-06-19)
+
+
+### Features
+
+* **dockertestx:** add admiralpiett/goaws as SNS/SQS testing ([#126](https://github.com/tier4/x-go/issues/126)) ([c414401](https://github.com/tier4/x-go/commit/c4144012d5cabe38ffea1a649bb0b712278a5cc2))
+
 ## [0.17.1](https://github.com/tier4/x-go/compare/dockertestx/v0.17.0...dockertestx/v0.17.1) (2025-02-19)
 
 
