@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.0](https://github.com/tier4/x-go/compare/v0.18.0...v0.19.0) (2025-08-12)
+
+
+### Features
+
+* migrate aws-sdk-go-v2 ([#139](https://github.com/tier4/x-go/issues/139)) ([ec1b6b8](https://github.com/tier4/x-go/commit/ec1b6b8c4709042c2912fbda9c95bc216b932837))
+
 ## [0.18.0](https://github.com/tier4/x-go/compare/v0.17.1...v0.18.0) (2025-06-19)
 
 
