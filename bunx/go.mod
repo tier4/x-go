@@ -1,6 +1,6 @@
 module github.com/tier4/x-go/bunx
 
-go 1.23.3
+go 1.24.0
 
 replace github.com/tier4/x-go/dockertestx => ../dockertestx
 
@@ -11,7 +11,7 @@ require (
 	github.com/uptrace/bun/dialect/pgdialect v1.2.15
 	github.com/uptrace/bun/driver/pgdriver v1.2.15
 	go.uber.org/zap v1.27.0
-	golang.org/x/sync v0.16.0
+	golang.org/x/sync v0.17.0
 )
 
 require (
