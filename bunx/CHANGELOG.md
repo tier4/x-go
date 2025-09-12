@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.19.0](https://github.com/tier4/x-go/compare/bunx/v0.18.0...bunx/v0.19.0) (2025-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop support for Go 1.23 and earlier versions. ([#153](https://github.com/tier4/x-go/issues/153))
+
+### Bug Fixes
+
+* drop support for Go 1.23 and earlier versions. ([#153](https://github.com/tier4/x-go/issues/153)) ([dc14d5b](https://github.com/tier4/x-go/commit/dc14d5b2d97e9e6a5c0bdd368e1a24abb0280129))
+
 ## [0.18.0](https://github.com/tier4/x-go/compare/bunx/v0.17.1...bunx/v0.18.0) (2025-06-19)
 
 
