@@ -12,8 +12,8 @@ jobs:
     strategy:
       matrix:
         go:
-          - '1.24'
-          - '1.25'
+          - "1.24"
+          - "1.25"
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -34,8 +34,8 @@ jobs:
     strategy:
       matrix:
         go:
-          - '1.24'
-          - '1.25'
+          - "1.24"
+          - "1.25"
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -56,8 +56,8 @@ jobs:
     strategy:
       matrix:
         go:
-          - '1.24'
-          - '1.25'
+          - "1.24"
+          - "1.25"
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -69,3 +69,58 @@ jobs:
       - run: go mod download
       - run: go mod verify
       - run: go test -v -count=1 -race ./...
+
+  fix-bunx-go-sum:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [unit-bunx]
+    # This job runs only when:
+    # 1. unit-bunx has failed (likely due to stale go.sum in bunx/)
+    # 2. The workflow was triggered by Dependabot
+    #
+    # Background: bunx depends on dockertestx via a local replace directive in go.mod.
+    # When Dependabot bumps dependencies in dockertestx/go.mod, dockertestx/go.sum is
+    # updated but bunx/go.sum is left stale — it lacks the hash entries for the newly
+    # introduced transitive dependencies. This causes the bunx build to fail with
+    # "missing go.sum entry" errors.
+    #
+    # This job automatically runs `go mod tidy` in bunx/ and pushes the updated
+    # go.sum back to the Dependabot PR branch so that subsequent CI runs pass.
+    # run_attempt == 1: auto re-run is triggered at most once (on the first failure).
+    # On attempt 2+, this job is skipped even if unit-bunx still fails.
+    if: failure() && github.actor == 'dependabot[bot]' && github.run_attempt == 1
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: bunx/go.mod
+
+      - name: Run go mod tidy in bunx
+        working-directory: bunx
+        run: go mod tidy
+
+      - name: Commit and push if changed
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add bunx/go.mod bunx/go.sum
+          if ! git diff --staged --quiet; then
+            git commit -m "chore(bunx): go mod tidy after dockertestx dependency update"
+            git push
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Re-run failed jobs if go.sum was fixed
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh run rerun ${{ github.run_id }} --failed
