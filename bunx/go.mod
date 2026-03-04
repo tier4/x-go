@@ -7,9 +7,9 @@ replace github.com/tier4/x-go/dockertestx => ../dockertestx
 require (
 	github.com/stretchr/testify v1.11.1
 	github.com/tier4/x-go/dockertestx v0.17.0
-	github.com/uptrace/bun v1.2.17
-	github.com/uptrace/bun/dialect/pgdialect v1.2.17
-	github.com/uptrace/bun/driver/pgdriver v1.2.17
+	github.com/uptrace/bun v1.2.18
+	github.com/uptrace/bun/dialect/pgdialect v1.2.18
+	github.com/uptrace/bun/driver/pgdriver v1.2.18
 	go.uber.org/zap v1.27.1
 	golang.org/x/sync v0.19.0
 )
