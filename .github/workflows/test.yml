@@ -12,8 +12,8 @@ jobs:
     strategy:
       matrix:
         go:
-          - "1.24"
           - "1.25"
+          - "1.26"
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -34,8 +34,8 @@ jobs:
     strategy:
       matrix:
         go:
-          - "1.24"
           - "1.25"
+          - "1.26"
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -56,8 +56,8 @@ jobs:
     strategy:
       matrix:
         go:
-          - "1.24"
           - "1.25"
+          - "1.26"
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
