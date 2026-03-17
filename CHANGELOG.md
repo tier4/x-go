@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.21.0](https://github.com/tier4/x-go/compare/v0.20.0...v0.21.0) (2026-03-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** bump golang.org/x/sync from 0.19.0 to 0.20.0 in /bunx in the patch-minor group ([#191](https://github.com/tier4/x-go/issues/191))
+
+### Bug Fixes
+
+* **deps:** bump golang.org/x/sync from 0.19.0 to 0.20.0 in /bunx in the patch-minor group ([#191](https://github.com/tier4/x-go/issues/191)) ([1fc15bb](https://github.com/tier4/x-go/commit/1fc15bbac19a0341dbc0d5cb9ac2ba6dcef1f41d))
+
 ## [0.20.0](https://github.com/tier4/x-go/compare/v0.19.0...v0.20.0) (2025-09-12)
 
 
