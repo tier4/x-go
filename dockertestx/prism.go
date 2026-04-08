@@ -1,6 +1,7 @@
 package dockertestx
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
@@ -11,6 +12,8 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
+	dc "github.com/ory/dockertest/v3/docker"
+
 	"github.com/ory/dockertest/v3"
 )
 
@@ -81,7 +84,19 @@ func (f *PrismFactory) ready(p *Pool, s *state) error {
 		// Fail immediately if the container has already exited.
 		c, err := p.Pool.Client.InspectContainer(s.r.Container.ID)
 		if err == nil && !c.State.Running {
-			return backoff.Permanent(fmt.Errorf("prism container exited with code %d", c.State.ExitCode))
+			// Retrieve container logs for diagnostics.
+			var stdout, stderr bytes.Buffer
+			_ = p.Pool.Client.Logs(dc.LogsOptions{
+				Container:    s.r.Container.ID,
+				OutputStream: &stdout,
+				ErrorStream:  &stderr,
+				Stdout:       true,
+				Stderr:       true,
+			})
+			return backoff.Permanent(fmt.Errorf(
+				"prism container exited with code %d\nstdout: %s\nstderr: %s",
+				c.State.ExitCode, stdout.String(), stderr.String(),
+			))
 		}
 
 		out, err := http.Get(u) // #nosec G107
