@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/cenkalti/backoff/v4"
 	"github.com/ory/dockertest/v3"
 )
 
@@ -63,8 +64,9 @@ func (f *PrismFactory) create(p *Pool, opt ContainerOption) (*state, error) {
 		Repository:    f.repository(),
 		Tag:           opt.Tag,
 		Env:           rOpt.Env,
-		DSN:           fmt.Sprintf("http://localhost:%s", resource.GetPort("4010/tcp")),
-		r:             resource,
+		// Use 127.0.0.1 explicitly to avoid IPv6 resolution of "localhost" in CI.
+		DSN: fmt.Sprintf("http://127.0.0.1:%s", resource.GetPort("4010/tcp")),
+		r:   resource,
 	}, nil
 }
 
@@ -73,9 +75,15 @@ func (f *PrismFactory) ready(p *Pool, s *state) error {
 	if err != nil {
 		return fmt.Errorf("invalid heath check path: %w", err)
 	}
-	// Prism takes longer to start than the default 1 minute MaxWait.
-	p.Pool.MaxWait = 2 * time.Minute
+	// Prism (a Node.js app) takes longer than the default 1-minute MaxWait to start in CI.
+	p.Pool.MaxWait = 3 * time.Minute
 	return p.Pool.Retry(func() error {
+		// Fail immediately if the container has already exited.
+		c, err := p.Pool.Client.InspectContainer(s.r.Container.ID)
+		if err == nil && !c.State.Running {
+			return backoff.Permanent(fmt.Errorf("prism container exited with code %d", c.State.ExitCode))
+		}
+
 		out, err := http.Get(u) // #nosec G107
 		if err != nil {
 			return err
