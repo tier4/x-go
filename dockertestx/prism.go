@@ -38,7 +38,7 @@ func (f *PrismFactory) create(p *Pool, opt ContainerOption) (*state, error) {
 		Repository: f.repository(),
 		Tag:        opt.Tag,
 		Env:        []string{},
-		Cmd:        []string{"mock", "-h", "0.0.0.0"},
+		Cmd:        []string{"mock", "--host", "0.0.0.0"},
 	}
 
 	if u, err := url.Parse(f.SpecURI); err == nil && (u.Scheme == "http" || u.Scheme == "https") {
