@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/ory/dockertest/v3"
 )
@@ -72,6 +73,8 @@ func (f *PrismFactory) ready(p *Pool, s *state) error {
 	if err != nil {
 		return fmt.Errorf("invalid heath check path: %w", err)
 	}
+	// Prism takes longer to start than the default 1 minute MaxWait.
+	p.Pool.MaxWait = 2 * time.Minute
 	return p.Pool.Retry(func() error {
 		out, err := http.Get(u) // #nosec G107
 		if err != nil {
