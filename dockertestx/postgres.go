@@ -29,7 +29,7 @@ func (f *PostgresFactory) create(p *Pool, opt ContainerOption) (*state, error) {
 			fmt.Sprintf("POSTGRES_DB=%s", dbName),
 		},
 	}
-	resource, err := p.Pool.RunWithOptions(rOpt)
+	resource, err := p.RunWithOptions(rOpt)
 	if err != nil {
 		return nil, fmt.Errorf("could not start resource: %w", err)
 	}
