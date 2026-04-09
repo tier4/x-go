@@ -10,7 +10,6 @@ import (
 
 	"github.com/h2non/filetype"
 	"github.com/klauspost/compress/zstd"
-	"github.com/pkg/errors"
 )
 
 // For protection from decompression bomb
@@ -36,14 +35,14 @@ func uncompress(tarball, targetDir string, maxFileSize int64) ([]string, error) 
 
 	stat, err := file.Stat()
 	if err != nil {
-		return nil, errors.Wrap(err, "cannot read file information")
+		return nil, fmt.Errorf("cannot read file information: %w", err)
 	}
 	header := make([]byte, min(262, stat.Size()))
 	if _, err := io.ReadFull(file, header); err != nil {
-		return nil, errors.Wrap(err, "cannot determine type by reading file header")
+		return nil, fmt.Errorf("cannot determine type by reading file header: %w", err)
 	}
 	if _, err := file.Seek(0, 0); err != nil {
-		return nil, errors.Wrap(err, "cannot seek file")
+		return nil, fmt.Errorf("cannot seek file: %w", err)
 	}
 
 	if !filetype.Is(header, "zst") {
