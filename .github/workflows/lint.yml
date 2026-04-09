@@ -11,10 +11,50 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
+
+      - name: Setup go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
 
       - name: golangci-lint
-        uses: reviewdog/action-golangci-lint@v2
+        uses: golangci/golangci-lint-action@v9
+
+  golangci-dockertestx:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dockertestx
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup go
+        uses: actions/setup-go@v6
         with:
-          reporter: github-pr-review
-          filter_mode: diff_context
+          go-version-file: dockertestx/go.mod
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          working-directory: dockertestx
+
+  golangci-bunx:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bunx
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: bunx/go.mod
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          working-directory: bunx
