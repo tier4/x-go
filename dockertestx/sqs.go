@@ -21,7 +21,7 @@ func (f *SQSFactory) create(p *Pool, opt ContainerOption) (*state, error) {
 		Repository: f.repository(),
 		Tag:        opt.Tag,
 	}
-	resource, err := p.Pool.RunWithOptions(rOpt)
+	resource, err := p.RunWithOptions(rOpt)
 	if err != nil {
 		return nil, fmt.Errorf("could not start resource: %w", err)
 	}
@@ -36,7 +36,7 @@ func (f *SQSFactory) create(p *Pool, opt ContainerOption) (*state, error) {
 }
 
 func (f *SQSFactory) ready(p *Pool, s *state) error {
-	return p.Pool.Retry(func() error {
+	return p.Retry(func() error {
 		cl := sqs.New(sqs.Options{
 			BaseEndpoint: aws.String(s.DSN),
 		})
