@@ -1,6 +1,7 @@
 package dockertestx
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
@@ -8,6 +9,10 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"time"
+
+	"github.com/cenkalti/backoff/v4"
+	dc "github.com/ory/dockertest/v3/docker"
 
 	"github.com/ory/dockertest/v3"
 )
@@ -36,7 +41,7 @@ func (f *PrismFactory) create(p *Pool, opt ContainerOption) (*state, error) {
 		Repository: f.repository(),
 		Tag:        opt.Tag,
 		Env:        []string{},
-		Cmd:        []string{"mock", "-h", "0.0.0.0"},
+		Cmd:        []string{"mock", "-h", "0.0.0.0", "-m", "false"},
 	}
 
 	if u, err := url.Parse(f.SpecURI); err == nil && (u.Scheme == "http" || u.Scheme == "https") {
@@ -62,8 +67,9 @@ func (f *PrismFactory) create(p *Pool, opt ContainerOption) (*state, error) {
 		Repository:    f.repository(),
 		Tag:           opt.Tag,
 		Env:           rOpt.Env,
-		DSN:           fmt.Sprintf("http://localhost:%s", resource.GetPort("4010/tcp")),
-		r:             resource,
+		// Use 127.0.0.1 explicitly to avoid IPv6 resolution of "localhost" in CI.
+		DSN: fmt.Sprintf("http://127.0.0.1:%s", resource.GetPort("4010/tcp")),
+		r:   resource,
 	}, nil
 }
 
@@ -72,7 +78,27 @@ func (f *PrismFactory) ready(p *Pool, s *state) error {
 	if err != nil {
 		return fmt.Errorf("invalid heath check path: %w", err)
 	}
+	// Prism (a Node.js app) takes longer than the default 1-minute MaxWait to start in CI.
+	p.Pool.MaxWait = 3 * time.Minute
 	return p.Pool.Retry(func() error {
+		// Fail immediately if the container has already exited.
+		c, err := p.Pool.Client.InspectContainer(s.r.Container.ID)
+		if err == nil && !c.State.Running {
+			// Retrieve container logs for diagnostics.
+			var stdout, stderr bytes.Buffer
+			_ = p.Pool.Client.Logs(dc.LogsOptions{
+				Container:    s.r.Container.ID,
+				OutputStream: &stdout,
+				ErrorStream:  &stderr,
+				Stdout:       true,
+				Stderr:       true,
+			})
+			return backoff.Permanent(fmt.Errorf(
+				"prism container exited with code %d\nstdout: %s\nstderr: %s",
+				c.State.ExitCode, stdout.String(), stderr.String(),
+			))
+		}
+
 		out, err := http.Get(u) // #nosec G107
 		if err != nil {
 			return err
