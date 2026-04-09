@@ -4,7 +4,6 @@ go 1.24
 
 require (
 	github.com/google/uuid v1.6.0
-	github.com/h2non/filetype v1.1.3
 	github.com/klauspost/compress v1.18.5
 	github.com/stretchr/testify v1.11.1
 )
