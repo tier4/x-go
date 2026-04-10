@@ -145,6 +145,12 @@ func Compress(src, dest string) error {
 	tarWriter := tar.NewWriter(enc)
 	defer tarWriter.Close()
 
+	root, err := os.OpenRoot(src)
+	if err != nil {
+		return err
+	}
+	defer root.Close()
+
 	dir := filepath.Base(src)
 	// walk through every file in the folder
 	return filepath.Walk(src, func(file string, fi os.FileInfo, e error) error {
@@ -173,7 +179,11 @@ func Compress(src, dest string) error {
 		}
 		// if not a dir, write file content
 		if !fi.IsDir() {
-			data, err := os.Open(file)
+			rel, err := filepath.Rel(src, file)
+			if err != nil {
+				return err
+			}
+			data, err := root.Open(rel)
 			if err != nil {
 				return err
 			}

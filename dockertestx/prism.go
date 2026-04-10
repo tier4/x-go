@@ -58,7 +58,7 @@ func (f *PrismFactory) create(p *Pool, opt ContainerOption) (*state, error) {
 		rOpt.Cmd = append(rOpt.Cmd, "/tmp/oas.yml")
 	}
 
-	resource, err := p.Pool.RunWithOptions(rOpt)
+	resource, err := p.RunWithOptions(rOpt)
 	if err != nil {
 		return nil, fmt.Errorf("could not start resource: %w", err)
 	}
@@ -79,14 +79,14 @@ func (f *PrismFactory) ready(p *Pool, s *state) error {
 		return fmt.Errorf("invalid heath check path: %w", err)
 	}
 	// Prism (a Node.js app) takes longer than the default 1-minute MaxWait to start in CI.
-	p.Pool.MaxWait = 3 * time.Minute
-	return p.Pool.Retry(func() error {
+	p.MaxWait = 3 * time.Minute
+	return p.Retry(func() error {
 		// Fail immediately if the container has already exited.
-		c, err := p.Pool.Client.InspectContainer(s.r.Container.ID)
+		c, err := p.Client.InspectContainer(s.r.Container.ID)
 		if err == nil && !c.State.Running {
 			// Retrieve container logs for diagnostics.
 			var stdout, stderr bytes.Buffer
-			_ = p.Pool.Client.Logs(dc.LogsOptions{
+			_ = p.Client.Logs(dc.LogsOptions{
 				Container:    s.r.Container.ID,
 				OutputStream: &stdout,
 				ErrorStream:  &stderr,
