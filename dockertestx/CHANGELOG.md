@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.1](https://github.com/tier4/x-go/compare/dockertestx/v0.20.0...dockertestx/v0.20.1) (2026-04-10)
+
+
+### Bug Fixes
+
+* **dockertestx:** fix flaky TestPool_NewPrism caused by slow Prism container startup ([#199](https://github.com/tier4/x-go/issues/199)) ([808bd88](https://github.com/tier4/x-go/commit/808bd88c1ca9b8c982a95d9156f02d06127e20ad))
+
 ## [0.20.0](https://github.com/tier4/x-go/compare/dockertestx/v0.19.0...dockertestx/v0.20.0) (2025-09-12)
 
 
