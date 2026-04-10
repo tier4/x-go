@@ -2,15 +2,18 @@ package zstdx
 
 import (
 	"archive/tar"
+	"bytes"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/h2non/filetype"
 	"github.com/klauspost/compress/zstd"
 )
+
+// zstdMagic is the magic number for Zstandard compressed data (RFC 8478).
+var zstdMagic = []byte{0x28, 0xB5, 0x2F, 0xFD}
 
 // For protection from decompression bomb
 const defaultMaxFileSize int64 = 16 * 1024 * 1024 * 1024
@@ -37,7 +40,7 @@ func uncompress(tarball, targetDir string, maxFileSize int64) ([]string, error) 
 	if err != nil {
 		return nil, fmt.Errorf("cannot read file information: %w", err)
 	}
-	header := make([]byte, min(262, stat.Size()))
+	header := make([]byte, min(4, stat.Size()))
 	if _, err := io.ReadFull(file, header); err != nil {
 		return nil, fmt.Errorf("cannot determine type by reading file header: %w", err)
 	}
@@ -45,7 +48,7 @@ func uncompress(tarball, targetDir string, maxFileSize int64) ([]string, error) 
 		return nil, fmt.Errorf("cannot seek file: %w", err)
 	}
 
-	if !filetype.Is(header, "zst") {
+	if !bytes.Equal(header, zstdMagic) {
 		return nil, fmt.Errorf("unknown file format when trying to uncompress %s", tarball)
 	}
 
