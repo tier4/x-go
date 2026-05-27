@@ -86,17 +86,27 @@ jobs:
     #
     # This job automatically runs `go mod tidy` in bunx/ and pushes the updated
     # go.sum back to the Dependabot PR branch so that subsequent CI runs pass.
-    # run_attempt == 1: auto re-run is triggered at most once (on the first failure).
-    # On attempt 2+, this job is skipped even if unit-bunx still fails.
+    #
+    # A GitHub App token is used for the push because pushes made with the default
+    # GITHUB_TOKEN do not trigger new workflow runs (a GitHub safeguard against
+    # infinite loops). The App token makes the push appear as a regular user push,
+    # which re-runs Test and Lint against the fixed commit.
     if: failure() && github.actor == 'dependabot[bot]' && github.run_attempt == 1
     permissions:
-      contents: write
+      contents: read
     steps:
+      - name: Generate App token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.DEPENDABOT_FIX_APP_ID }}
+          private-key: ${{ secrets.DEPENDABOT_FIX_PRIVATE_KEY }}
+
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ github.ref }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup go
         uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
@@ -108,7 +118,6 @@ jobs:
         run: go mod tidy
 
       - name: Commit and push if changed
-        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -116,11 +125,4 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "chore(bunx): go mod tidy after dockertestx dependency update"
             git push
-            echo "changed=true" >> $GITHUB_OUTPUT
           fi
-
-      - name: Re-run failed jobs if go.sum was fixed
-        if: steps.commit.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh run rerun ${{ github.run_id }} --failed
