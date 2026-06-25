@@ -39,7 +39,7 @@ func TestUncompressWithCustomSizeLimit(t *testing.T) {
 	require.NoError(t, os.WriteFile(
 		filepath.Join(srcDir, "data.txt"),
 		bytes.Repeat([]byte("a"), contentSize),
-		0o644,
+		0o600,
 	))
 	tarball := filepath.Join(t.TempDir(), "archive.tar.zst")
 	require.NoError(t, zstdx.Compress(srcDir, tarball))
