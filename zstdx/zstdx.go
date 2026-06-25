@@ -116,8 +116,15 @@ func untarFile(tarReader *tar.Reader, header *tar.Header, path string, maxFileSi
 	}
 	defer file.Close()
 
-	if _, err = io.CopyN(file, tarReader, maxFileSize); err != nil && err != io.EOF {
+	// Copy at most maxFileSize+1 bytes so an entry that exceeds the limit is
+	// detected and rejected instead of being silently truncated
+	// (decompression-bomb protection).
+	written, err := io.CopyN(file, tarReader, maxFileSize+1)
+	if err != nil && err != io.EOF {
 		return err
+	}
+	if written > maxFileSize {
+		return fmt.Errorf("file %q exceeds the maximum allowed size of %d bytes", header.Name, maxFileSize)
 	}
 
 	return nil
