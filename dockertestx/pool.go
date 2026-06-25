@@ -84,11 +84,7 @@ func (p *Pool) ForcePurge() error {
 			continue
 		}
 		if e := p.Pool.Purge(s.r); e != nil {
-			if err == nil {
-				err = e
-			} else {
-				err = fmt.Errorf("%s: %w", err, err)
-			}
+			err = errors.Join(err, e)
 		}
 	}
 	return err
