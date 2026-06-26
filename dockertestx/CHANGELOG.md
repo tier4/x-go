@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.2](https://github.com/tier4/x-go/compare/dockertestx/v0.20.1...dockertestx/v0.20.2) (2026-06-26)
+
+
+### Bug Fixes
+
+* **dockertestx:** use errors.Join to properly aggregate ForcePurge errors ([#225](https://github.com/tier4/x-go/issues/225)) ([28eb65e](https://github.com/tier4/x-go/commit/28eb65e8b7e4a797cbbd13ee1a456410b50b817b))
+
 ## [0.20.1](https://github.com/tier4/x-go/compare/dockertestx/v0.20.0...dockertestx/v0.20.1) (2026-04-10)
 
 
