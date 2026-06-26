@@ -139,21 +139,30 @@ func SanitizeExtractPath(filePath, destination string) (string, error) {
 	return path, nil
 }
 
-func Compress(src, dest string) error {
+func Compress(src, dest string) (err error) {
+	// zstd/tar buffer data and flush on Close, so a Close failure means the
+	// archive may be truncated/corrupted. Capture the first non-nil error so a
+	// flush failure is reported without masking the original error.
+	closeWith := func(c io.Closer) {
+		if cerr := c.Close(); cerr != nil && err == nil {
+			err = cerr
+		}
+	}
+
 	out, err := os.Create(dest)
 	if err != nil {
 		return err
 	}
-	defer out.Close()
+	defer closeWith(out)
 
 	enc, err := zstd.NewWriter(out)
 	if err != nil {
 		return err
 	}
-	defer enc.Close()
+	defer closeWith(enc)
 
 	tarWriter := tar.NewWriter(enc)
-	defer tarWriter.Close()
+	defer closeWith(tarWriter)
 
 	root, err := os.OpenRoot(src)
 	if err != nil {
