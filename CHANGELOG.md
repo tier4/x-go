@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.22.0](https://github.com/tier4/x-go/compare/v0.21.1...v0.22.0) (2026-06-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **zstdx:** Uncompress and UncompressWithCustomSizeLimit now also enforce a default total uncompressed-size cap (64 GiB) and entry-count cap (1,000,000) in addition to the per-file cap. Archives that exceed these limits, which previously extracted successfully, now return an error. To extract larger archives, switch to UncompressWithLimits and raise MaxTotalSize / MaxEntries. Note that non-positive fields fall back to the defaults rather than meaning unlimited, so use a large value such as math.MaxInt64 to effectively disable a cap.
+
+### Bug Fixes
+
+* **dockertestx:** use errors.Join to properly aggregate ForcePurge errors ([#225](https://github.com/tier4/x-go/issues/225)) ([28eb65e](https://github.com/tier4/x-go/commit/28eb65e8b7e4a797cbbd13ee1a456410b50b817b))
+* **zstdx:** cap total extraction size and entry count to prevent decompression bombs ([#228](https://github.com/tier4/x-go/issues/228)) ([c778af2](https://github.com/tier4/x-go/commit/c778af2091496439577993bb35a6816904c3d5ea))
+* **zstdx:** capture writer Close errors in Compress ([#229](https://github.com/tier4/x-go/issues/229)) ([cad22ba](https://github.com/tier4/x-go/commit/cad22bab2efae79a7100668cb665bdc8af48ad3c))
+* **zstdx:** reject files exceeding maxFileSize instead of truncating ([#226](https://github.com/tier4/x-go/issues/226)) ([4a67fff](https://github.com/tier4/x-go/commit/4a67fffbb3f1487d49ba7298e1c135d78159a58a))
+
 ## [0.21.1](https://github.com/tier4/x-go/compare/v0.21.0...v0.21.1) (2026-04-10)
 
 
