@@ -2,6 +2,8 @@ package zstdx_test
 
 import (
 	"bytes"
+	"fmt"
+	"math"
 	"os"
 	"path/filepath"
 	"testing"
@@ -78,6 +80,89 @@ func TestUncompressWithCustomSizeLimit(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				outDir := t.TempDir()
 				_, err := zstdx.UncompressWithCustomSizeLimit(tarball, outDir, tt.maxFileSize)
+				require.Error(t, err)
+			})
+		}
+	})
+}
+
+func TestUncompressWithLimits(t *testing.T) {
+	// buildTarball writes fileCount files of fileSize bytes each into a fresh
+	// source directory and compresses it into a tarball, returning the tarball
+	// path. The resulting archive has fileCount file entries plus one directory
+	// entry for the root.
+	buildTarball := func(t *testing.T, fileCount int, fileSize int) string {
+		t.Helper()
+		srcDir := t.TempDir()
+		for i := 0; i < fileCount; i++ {
+			require.NoError(t, os.WriteFile(
+				filepath.Join(srcDir, fmt.Sprintf("data%d.txt", i)),
+				bytes.Repeat([]byte("a"), fileSize),
+				0o600,
+			))
+		}
+		tarball := filepath.Join(t.TempDir(), "archive.tar.zst")
+		require.NoError(t, zstdx.Compress(srcDir, tarball))
+		return tarball
+	}
+
+	t.Run("succeeds", func(t *testing.T) {
+		const fileCount = 4
+		const fileSize = 1024
+		tarball := buildTarball(t, fileCount, fileSize)
+
+		tests := map[string]zstdx.Limits{
+			"generous limits": {
+				MaxFileSize:  fileSize,
+				MaxTotalSize: fileCount * fileSize,
+				MaxEntries:   fileCount + 1, // files + root directory
+			},
+			"zero-value limits fall back to defaults": {},
+			// math.MaxInt64 is the documented way to effectively disable a cap.
+			// It exercises the copyLimit overflow guard in untarFile: without the
+			// guard, +1 wraps negative and io.CopyN silently extracts 0 bytes.
+			"max-int limits disable caps without truncation": {
+				MaxFileSize:  math.MaxInt64,
+				MaxTotalSize: math.MaxInt64,
+				MaxEntries:   fileCount + 1,
+			},
+		}
+		for name, limits := range tests {
+			t.Run(name, func(t *testing.T) {
+				outDir := t.TempDir()
+				files, err := zstdx.UncompressWithLimits(tarball, outDir, limits)
+				require.NoError(t, err)
+				assert.Len(t, files, fileCount)
+				for _, f := range files {
+					info, err := os.Stat(f)
+					require.NoError(t, err)
+					assert.Equal(t, int64(fileSize), info.Size())
+				}
+			})
+		}
+	})
+
+	t.Run("fails", func(t *testing.T) {
+		const fileCount = 4
+		const fileSize = 1024
+		tarball := buildTarball(t, fileCount, fileSize)
+
+		tests := map[string]zstdx.Limits{
+			"total size below cumulative size": {
+				MaxFileSize:  fileSize,               // each file is within the per-file cap
+				MaxTotalSize: fileCount*fileSize - 1, // but the sum exceeds the total cap
+				MaxEntries:   fileCount + 1,
+			},
+			"entry count below number of entries": {
+				MaxFileSize:  fileSize,
+				MaxTotalSize: fileCount * fileSize,
+				MaxEntries:   fileCount, // one short: files + root directory exceed this
+			},
+		}
+		for name, limits := range tests {
+			t.Run(name, func(t *testing.T) {
+				outDir := t.TempDir()
+				_, err := zstdx.UncompressWithLimits(tarball, outDir, limits)
 				require.Error(t, err)
 			})
 		}

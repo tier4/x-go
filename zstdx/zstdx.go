@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"math"
 	"os"
 	"path/filepath"
 	"strings"
@@ -16,20 +17,70 @@ import (
 var zstdMagic = []byte{0x28, 0xB5, 0x2F, 0xFD}
 
 // For protection from decompression bomb
-const defaultMaxFileSize int64 = 16 * 1024 * 1024 * 1024
+const (
+	defaultMaxFileSize  int64 = 16 * 1024 * 1024 * 1024 // per-file uncompressed size cap
+	defaultMaxTotalSize int64 = 64 * 1024 * 1024 * 1024 // cumulative uncompressed size cap
+	defaultMaxEntries   int   = 1_000_000               // max number of tar entries
+)
 
-// Uncompress with a default max file size limit
-func Uncompress(tarball, targetDir string) ([]string, error) {
-	return uncompress(tarball, targetDir, defaultMaxFileSize)
+// Limits bounds resource usage during extraction to protect against
+// decompression bombs. A non-positive field falls back to its default, so a
+// zero-value Limits is equivalent to DefaultLimits().
+type Limits struct {
+	// MaxFileSize is the maximum uncompressed size of a single entry, in bytes.
+	MaxFileSize int64
+	// MaxTotalSize is the maximum cumulative uncompressed size across all
+	// entries, in bytes.
+	MaxTotalSize int64
+	// MaxEntries is the maximum number of tar entries (directories and files)
+	// that may be processed.
+	MaxEntries int
 }
 
-// UncompressWithCustomSizeLimit with a specified max file size limit
+// DefaultLimits returns the default extraction limits.
+func DefaultLimits() Limits {
+	return Limits{
+		MaxFileSize:  defaultMaxFileSize,
+		MaxTotalSize: defaultMaxTotalSize,
+		MaxEntries:   defaultMaxEntries,
+	}
+}
+
+// withDefaults replaces any non-positive field with its default value.
+func (l Limits) withDefaults() Limits {
+	if l.MaxFileSize <= 0 {
+		l.MaxFileSize = defaultMaxFileSize
+	}
+	if l.MaxTotalSize <= 0 {
+		l.MaxTotalSize = defaultMaxTotalSize
+	}
+	if l.MaxEntries <= 0 {
+		l.MaxEntries = defaultMaxEntries
+	}
+	return l
+}
+
+// Uncompress with the default extraction limits (see DefaultLimits).
+func Uncompress(tarball, targetDir string) ([]string, error) {
+	return uncompress(tarball, targetDir, DefaultLimits())
+}
+
+// UncompressWithCustomSizeLimit with a specified per-file max size limit. The
+// total-size and entry-count limits use their defaults.
 func UncompressWithCustomSizeLimit(tarball, targetDir string, maxFileSize int64) ([]string, error) {
-	return uncompress(tarball, targetDir, maxFileSize)
+	return uncompress(tarball, targetDir, Limits{MaxFileSize: maxFileSize})
+}
+
+// UncompressWithLimits with fully customized extraction limits. Any
+// non-positive field in limits falls back to its default.
+func UncompressWithLimits(tarball, targetDir string, limits Limits) ([]string, error) {
+	return uncompress(tarball, targetDir, limits)
 }
 
 // The code at https://go.dev/play/p/A2GXsDFWx9m is used as a reference
-func uncompress(tarball, targetDir string, maxFileSize int64) ([]string, error) {
+func uncompress(tarball, targetDir string, limits Limits) ([]string, error) {
+	limits = limits.withDefaults()
+
 	file, err := os.Open(filepath.Clean(tarball))
 	if err != nil {
 		return nil, err
@@ -56,12 +107,15 @@ func uncompress(tarball, targetDir string, maxFileSize int64) ([]string, error) 
 	if err != nil {
 		return nil, err
 	}
-	return untar(reader, targetDir, maxFileSize)
+	return untar(reader, targetDir, limits)
 }
 
-func untar(reader io.Reader, targetDir string, maxFileSize int64) ([]string, error) {
+func untar(reader io.Reader, targetDir string, limits Limits) ([]string, error) {
 	var extractedFiles []string
 	tarReader := tar.NewReader(reader)
+
+	var totalWritten int64
+	var entries int
 
 	for {
 		header, err := tarReader.Next()
@@ -77,6 +131,13 @@ func untar(reader io.Reader, targetDir string, maxFileSize int64) ([]string, err
 		// if the header is nil, just skip it (not sure how this happens)
 		case header == nil:
 			continue
+		}
+
+		// Bound the number of entries to protect against archives with a huge
+		// number of (possibly tiny) files or directories.
+		entries++
+		if entries > limits.MaxEntries {
+			return nil, fmt.Errorf("archive exceeds the maximum allowed number of entries (%d)", limits.MaxEntries)
 		}
 
 		// the target location where the dir/file should be created
@@ -97,37 +158,50 @@ func untar(reader io.Reader, targetDir string, maxFileSize int64) ([]string, err
 		// if it's a file create it
 		case tar.TypeReg, tar.TypeGNUSparse:
 			// tar.Next() will externally only iterate files, so we might have to create intermediate directories here
-			if err := untarFile(tarReader, header, path, maxFileSize); err != nil {
+			written, err := untarFile(tarReader, header, path, limits.MaxFileSize, limits.MaxTotalSize-totalWritten)
+			if err != nil {
 				return nil, err
+			}
+			totalWritten += written
+			// Bound the cumulative uncompressed size across all entries.
+			if totalWritten > limits.MaxTotalSize {
+				return nil, fmt.Errorf("archive exceeds the maximum allowed total uncompressed size of %d bytes", limits.MaxTotalSize)
 			}
 			extractedFiles = append(extractedFiles, path)
 		}
 	}
 }
 
-func untarFile(tarReader *tar.Reader, header *tar.Header, path string, maxFileSize int64) error {
+func untarFile(tarReader *tar.Reader, header *tar.Header, path string, maxFileSize, remainingTotal int64) (int64, error) {
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
-		return err
+		return 0, err
 	}
 
 	file, err := os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, header.FileInfo().Mode()|0444)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer file.Close()
 
-	// Copy at most maxFileSize+1 bytes so an entry that exceeds the limit is
-	// detected and rejected instead of being silently truncated
-	// (decompression-bomb protection).
-	written, err := io.CopyN(file, tarReader, maxFileSize+1)
+	// Copy at most one byte beyond the smaller of the per-file limit and the
+	// remaining total budget, so an entry that exceeds either limit is detected
+	// and rejected instead of being silently truncated or exhausting the disk
+	// (decompression-bomb protection). Guard the +1 against int64 overflow: when
+	// the limit is math.MaxInt64 (used to effectively disable a cap), adding one
+	// would wrap to a negative count, making io.CopyN silently copy nothing.
+	copyLimit := min(maxFileSize, remainingTotal)
+	if copyLimit < math.MaxInt64 {
+		copyLimit++
+	}
+	written, err := io.CopyN(file, tarReader, copyLimit)
 	if err != nil && err != io.EOF {
-		return err
+		return written, err
 	}
 	if written > maxFileSize {
-		return fmt.Errorf("file %q exceeds the maximum allowed size of %d bytes", header.Name, maxFileSize)
+		return written, fmt.Errorf("file %q exceeds the maximum allowed size of %d bytes", header.Name, maxFileSize)
 	}
 
-	return nil
+	return written, nil
 }
 
 // cf. https://snyk.io/research/zip-slip-vulnerability
