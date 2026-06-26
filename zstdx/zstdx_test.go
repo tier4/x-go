@@ -3,6 +3,7 @@ package zstdx_test
 import (
 	"bytes"
 	"fmt"
+	"math"
 	"os"
 	"path/filepath"
 	"testing"
@@ -117,6 +118,14 @@ func TestUncompressWithLimits(t *testing.T) {
 				MaxEntries:   fileCount + 1, // files + root directory
 			},
 			"zero-value limits fall back to defaults": {},
+			// math.MaxInt64 is the documented way to effectively disable a cap.
+			// It exercises the copyLimit overflow guard in untarFile: without the
+			// guard, +1 wraps negative and io.CopyN silently extracts 0 bytes.
+			"max-int limits disable caps without truncation": {
+				MaxFileSize:  math.MaxInt64,
+				MaxTotalSize: math.MaxInt64,
+				MaxEntries:   fileCount + 1,
+			},
 		}
 		for name, limits := range tests {
 			t.Run(name, func(t *testing.T) {

@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"math"
 	"os"
 	"path/filepath"
 	"strings"
@@ -185,8 +186,13 @@ func untarFile(tarReader *tar.Reader, header *tar.Header, path string, maxFileSi
 	// Copy at most one byte beyond the smaller of the per-file limit and the
 	// remaining total budget, so an entry that exceeds either limit is detected
 	// and rejected instead of being silently truncated or exhausting the disk
-	// (decompression-bomb protection).
-	copyLimit := min(maxFileSize, remainingTotal) + 1
+	// (decompression-bomb protection). Guard the +1 against int64 overflow: when
+	// the limit is math.MaxInt64 (used to effectively disable a cap), adding one
+	// would wrap to a negative count, making io.CopyN silently copy nothing.
+	copyLimit := min(maxFileSize, remainingTotal)
+	if copyLimit < math.MaxInt64 {
+		copyLimit++
+	}
 	written, err := io.CopyN(file, tarReader, copyLimit)
 	if err != nil && err != io.EOF {
 		return written, err
