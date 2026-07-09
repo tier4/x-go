@@ -1,0 +1,10 @@
+# 共有 mise 設定。secret scan の pre-commit のみを管理する。
+# 個人用ツール（go 等）の pin は mise.local.toml に置くこと。
+[settings]
+experimental = true # [hooks] を有効化するために必要
+
+[tools]
+pre-commit = "4.5.1"
+
+[hooks]
+postinstall = "pre-commit install"

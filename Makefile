@@ -35,6 +35,10 @@ deps: ## download dependencies
 	find . -name go.mod -execdir $(GO) mod download \;
 	find . -name go.mod -execdir $(GO) mod tidy \;
 
+.PHONY: setup
+setup: deps ## setup dev environment (deps + pre-commit hook)
+	pre-commit install
+
 .PHONY: test
 test: unit-test ## test all
 
