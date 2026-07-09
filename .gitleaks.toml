@@ -1,25 +1,16 @@
-# gitleaks 設定ファイル（pre-commit / GitHub Actions 共通）
+# gitleaks config (shared by pre-commit / GitHub Actions)
 # docs: https://github.com/gitleaks/gitleaks#configuration
 title = "gitleaks config"
 
-# gitleaks 同梱のデフォルトルールセットをベースに拡張する。
+# Extend the ruleset bundled with gitleaks.
 [extend]
 useDefault = true
 
-# --- 追加ルール例 ---------------------------------------------------------
-# Tier IV 固有の token prefix 等を検知したい場合の雛形。
-# 実際の token 体系に合わせて regex を調整、不要なら丸ごと削除する。
-# [[rules]]
-# id = "tier4-internal-token"
-# description = "Tier IV internal service token"
-# regex = '''(?i)t4_(?:prod|stg|dev)_[A-Za-z0-9]{32,}'''
-# tags = ["tier4", "internal"]
-
-# --- 誤検知対策（allowlist）必要に応じてコメントをはずして有効にしてください ---
+# --- False-positive suppression (allowlist): uncomment as needed ----------
 # [allowlist]
 # description = "Global allowlist"
 
-## スキャン対象から除外するパス（テスト用 fixture・サンプル等）
+## Paths to exclude from scanning (test fixtures, samples, etc.)
 # paths = [
 #  '''\.gitleaks\.toml$''',
 #  '''(?i)tests?/.*fixtures?/''',
@@ -29,7 +20,7 @@ useDefault = true
 #  '''(?i)CHANGELOG\.md$''',
 # ]
 
-# 明らかにダミーと分かる値（AWS 公式ドキュメントのサンプルキー等）
+# Values that are clearly dummies (e.g. sample keys from AWS official docs)
 # regexes = [
 #   '''AKIAIOSFODNN7EXAMPLE''',
 #   '''wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY''',
