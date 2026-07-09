@@ -1,0 +1,27 @@
+# gitleaks config (shared by pre-commit / GitHub Actions)
+# docs: https://github.com/gitleaks/gitleaks#configuration
+title = "gitleaks config"
+
+# Extend the ruleset bundled with gitleaks.
+[extend]
+useDefault = true
+
+# --- False-positive suppression (allowlist): uncomment as needed ----------
+# [allowlist]
+# description = "Global allowlist"
+
+## Paths to exclude from scanning (test fixtures, samples, etc.)
+# paths = [
+#  '''\.gitleaks\.toml$''',
+#  '''(?i)tests?/.*fixtures?/''',
+#  '''(?i)testdata/''',
+#  '''\.example$''',
+#  '''\.sample$''',
+#  '''(?i)CHANGELOG\.md$''',
+# ]
+
+# Values that are clearly dummies (e.g. sample keys from AWS official docs)
+# regexes = [
+#   '''AKIAIOSFODNN7EXAMPLE''',
+#   '''wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY''',
+# ]
