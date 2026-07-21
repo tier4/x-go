@@ -14,15 +14,27 @@ func TestIsUUIDString(t *testing.T) {
 		expected bool
 	}{
 		"valid": {
-			arg:      "f792d50f-8e11-44ae-cadc-d7b8aeaeecf3",
+			arg:      "f792d50f-8e11-44ae-8adc-d7b8aeaeecf3",
+			expected: true,
+		},
+		"valid uppercase": {
+			arg:      "F792D50F-8E11-44AE-8ADC-D7B8AEAEECF3",
 			expected: true,
 		},
 		"invalid character": {
-			arg:      "z792d50f-8e11-44ae-cadc-d7b8aeaeecf3",
+			arg:      "z792d50f-8e11-44ae-8adc-d7b8aeaeecf3",
 			expected: false,
 		},
 		"invalid length": {
-			arg:      "f792d50f-8e11-44ae-cadc-d7b8aeaeecf",
+			arg:      "f792d50f-8e11-44ae-8adc-d7b8aeaeecf",
+			expected: false,
+		},
+		"invalid version": {
+			arg:      "f792d50f-8e11-94ae-8adc-d7b8aeaeecf3",
+			expected: false,
+		},
+		"invalid variant": {
+			arg:      "f792d50f-8e11-44ae-cadc-d7b8aeaeecf3",
 			expected: false,
 		},
 	} {
