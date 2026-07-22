@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.22.1](https://github.com/tier4/x-go/compare/v0.22.0...v0.22.1) (2026-07-22)
+
+
+### Bug Fixes
+
+* **idx:** validate uuid case-insensitively and check version/variant nibbles ([#239](https://github.com/tier4/x-go/issues/239)) ([38963ae](https://github.com/tier4/x-go/commit/38963ae9432dc739507d983f2c5f48dcff2e5626))
+* **random:** avoid panic on negative length and O(n^2) string build ([#238](https://github.com/tier4/x-go/issues/238)) ([bf3ae8d](https://github.com/tier4/x-go/commit/bf3ae8d018b96861f3ae3cd788d5e3c25dba410a))
+
 ## [0.22.0](https://github.com/tier4/x-go/compare/v0.21.1...v0.22.0) (2026-06-26)
 
 
