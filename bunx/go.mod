@@ -1,17 +1,17 @@
 module github.com/tier4/x-go/bunx
 
-go 1.25.0
+go 1.26.0
 
 replace github.com/tier4/x-go/dockertestx => ../dockertestx
 
 require (
 	github.com/stretchr/testify v1.12.1
 	github.com/tier4/x-go/dockertestx v0.17.0
-	github.com/uptrace/bun v1.2.18
-	github.com/uptrace/bun/dialect/pgdialect v1.2.18
-	github.com/uptrace/bun/driver/pgdriver v1.2.18
+	github.com/uptrace/bun v1.3.0
+	github.com/uptrace/bun/dialect/pgdialect v1.3.0
+	github.com/uptrace/bun/driver/pgdriver v1.3.0
 	go.uber.org/zap v1.28.0
-	golang.org/x/sync v0.22.0
+	golang.org/x/sync v0.24.0
 )
 
 require (
