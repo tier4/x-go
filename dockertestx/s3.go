@@ -19,19 +19,21 @@ const (
 type S3Factory struct{}
 
 func (f *S3Factory) repository() string {
-	return "minio/minio"
+	return "versity/versitygw"
 }
 
 func (f *S3Factory) create(p *Pool, opt ContainerOption) (*state, error) {
 	rOpt := &dockertest.RunOptions{
-		Name:       opt.Name,
-		Repository: f.repository(),
-		Tag:        opt.Tag,
+		Name:         opt.Name,
+		Repository:   f.repository(),
+		Tag:          opt.Tag,
+		ExposedPorts: []string{"7070/tcp"},
 		Env: []string{
-			fmt.Sprintf("MINIO_ACCESS_KEY=%s", S3AWSAccessKeyID),
-			fmt.Sprintf("MINIO_SECRET_KEY=%s", S3AWSSecretAccessKey),
+			"VGW_BACKEND=posix",
+			"VGW_BACKEND_ARG=/tmp",
+			fmt.Sprintf("ROOT_ACCESS_KEY_ID=%s", S3AWSAccessKeyID),
+			fmt.Sprintf("ROOT_SECRET_ACCESS_KEY=%s", S3AWSSecretAccessKey),
 		},
-		Cmd: []string{"server", "/data"},
 	}
 	resource, err := p.RunWithOptions(rOpt)
 	if err != nil {
@@ -42,7 +44,7 @@ func (f *S3Factory) create(p *Pool, opt ContainerOption) (*state, error) {
 		Repository:    f.repository(),
 		Tag:           opt.Tag,
 		Env:           rOpt.Env,
-		DSN:           fmt.Sprintf("http://localhost:%s", resource.GetPort("9000/tcp")),
+		DSN:           fmt.Sprintf("http://localhost:%s", resource.GetPort("7070/tcp")),
 		r:             resource,
 	}, nil
 }
