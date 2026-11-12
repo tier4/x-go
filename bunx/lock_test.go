@@ -4,13 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"sync"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/uptrace/bun"
-	"golang.org/x/sync/errgroup"
 
 	"github.com/tier4/x-go/bunx"
 )
@@ -21,24 +21,36 @@ func TestClient_TransactionWithTryAdvisoryLock(t *testing.T) {
 	user2 := &User{Email: "TransactionWithTryAdvisoryLock_02@example.com"}
 
 	key := "test"
-	var eg errgroup.Group
-	eg.Go(func() error {
-		return client.TransactionWithTryAdvisoryLock(ctx, key, func(ctx context.Context, tx bun.Tx) error {
+	var (
+		wg       sync.WaitGroup
+		errOnce  sync.Once
+		firstErr error
+	)
+	// keep the first non-nil error, like errgroup.Group.Wait does
+	recordErr := func(err error) {
+		if err != nil {
+			errOnce.Do(func() { firstErr = err })
+		}
+	}
+
+	wg.Go(func() {
+		recordErr(client.TransactionWithTryAdvisoryLock(ctx, key, func(ctx context.Context, tx bun.Tx) error {
 			time.Sleep(100 * time.Millisecond)
 			_, err := tx.NewInsert().Model(user1).Exec(ctx)
 			return err
-		})
+		}))
 	})
 	// to ensure to start 1st transaction
 	time.Sleep(10 * time.Millisecond)
-	eg.Go(func() error {
-		return client.TransactionWithTryAdvisoryLock(ctx, key, func(ctx context.Context, tx bun.Tx) error {
+	wg.Go(func() {
+		recordErr(client.TransactionWithTryAdvisoryLock(ctx, key, func(ctx context.Context, tx bun.Tx) error {
 			_, err := tx.NewInsert().Model(user2).Exec(ctx)
 			return err
-		})
+		}))
 	})
 
-	err := eg.Wait()
+	wg.Wait()
+	err := firstErr
 	require.Error(t, err)
 	assert.ErrorIs(t, err, bunx.ErrDataLockTaken)
 
