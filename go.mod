@@ -4,7 +4,7 @@ go 1.25
 
 require (
 	github.com/google/uuid v1.6.0
-	github.com/klauspost/compress v1.20.4
+	github.com/klauspost/compress v1.20.5
 	github.com/stretchr/testify v1.12.1
 )
 
